@@ -1,6 +1,6 @@
 <?php
 
-class AccountsController extends \BaseController {
+class AccountsController extends ApiController {
 
 	/**
 	 * Display a listing of accounts
