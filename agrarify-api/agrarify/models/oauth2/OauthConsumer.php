@@ -2,7 +2,15 @@
 
 namespace Agrarify\Models\Oauth2;
 
-class Account extends Eloquent {
+use Illuminate\Database\Eloquent\Model;
+
+class OauthConsumer extends Model {
+
+    function __construct() {
+        parent::__construct();
+        $this->consumer_id = str_random(40);
+        $this->consumer_secret = str_random(42);
+    }
 
     /**
      * The database table used by the model.

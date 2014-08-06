@@ -18,23 +18,25 @@ class CreateInitialSchema extends Migration {
 			$table->string('given_name', 50)->nullable();
 			$table->string('surname', 50)->nullable();
 			$table->string('password', 100)->nullable();
+            $table->string('email_address', 100)->nullable();
             $table->string('verification_code', 1)->nullable();
             $table->timestamp('verification_timestamp');
 			$table->timestamps();
+            $table->unique('email_address');
 		});
 
-        Schema::create('emails', function(Blueprint $table)
-        {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('account_id');
-            $table->boolean('is_primary')->default(false);
-            $table->string('address', 100);
-            $table->string('verification_code', 1)->nullable();
-            $table->timestamp('verification_timestamp');
-            $table->timestamps();
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            $table->unique('address');
-        });
+//        Schema::create('emails', function(Blueprint $table)
+//        {
+//            $table->bigIncrements('id');
+//            $table->unsignedBigInteger('account_id');
+//            $table->boolean('is_primary')->default(false);
+//            $table->string('address', 100);
+//            $table->string('verification_code', 1)->nullable();
+//            $table->timestamp('verification_timestamp');
+//            $table->timestamps();
+//            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+//            $table->unique('address');
+//        });
 
         Schema::create('oauth_consumers', function(Blueprint $table)
         {
@@ -72,7 +74,7 @@ class CreateInitialSchema extends Migration {
 	{
 		Schema::drop('oauth_access_tokens');
         Schema::drop('oauth_consumers');
-        Schema::drop('emails');
+//        Schema::drop('emails');
         Schema::drop('accounts');
 	}
 

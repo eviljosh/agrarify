@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Response as HttpResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,28 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 | shown, which includes a detailed stack trace during debug.
 |
 */
+
+App::error(function(Symfony\Component\HttpKernel\Exception\HttpException $exception, $code) {
+    $message = $exception->getMessage() ?: 'Please refer to status code.';
+    return Response::json(
+        ['errors' => ['message' => $message]],
+        $exception->getStatusCode()
+    );
+});
+
+App::error(function(\Whoops\Exception\ErrorException $exception, $code) {
+    return Response::json(
+        ['errors' => ['message' => $exception->getMessage()]],
+        HttpResponse::HTTP_INTERNAL_SERVER_ERROR
+    );
+});
+
+App::fatal(function($exception) {
+    return Response::json(
+        ['errors' => ['message' => $exception->getMessage()]],
+        HttpResponse::HTTP_INTERNAL_SERVER_ERROR
+    );
+});
 
 App::error(function(Exception $exception, $code)
 {

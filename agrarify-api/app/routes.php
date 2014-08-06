@@ -2,17 +2,6 @@
 
 use \Illuminate\Support\Facades\Hash;
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
-
 Route::get('/', 'HomeController@showWelcome');
 
 Route::get('/josh', function()
@@ -27,3 +16,6 @@ Route::get('/josh', function()
     $string = str_random(40);
     dd($string);
 });
+
+Route::post('/v1/oauth_consumer', ['as' => 'v1.oauthconsumer.create', 'uses' => 'OauthController@createConsumer']);
+Route::post('/v1/access_token', ['as' => 'v1.accesstoken.create', 'uses' => 'OauthController@createAccessToken']);

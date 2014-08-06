@@ -1,6 +1,7 @@
 <?php
+use Agrarify\Models\Oauth2\OauthConsumer;
 
-class AccountsController extends ApiController {
+class OauthController extends ApiController {
 
 	/**
 	 * Creates an oauth2 consumer
@@ -10,6 +11,10 @@ class AccountsController extends ApiController {
 	public function createConsumer()
 	{
 		// TODO: make route, check password, throw 403, generate random strings and such, save, return
+
+        $consumer = new OauthConsumer();
+        return Response::json($consumer);
+        //return Response::json('Hello there this is createConsumer...');
 	}
 
     /**
