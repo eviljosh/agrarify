@@ -1,5 +1,9 @@
 <?php
+use Agrarify\Api\Exception\ApiErrorException;
 use Agrarify\Models\Oauth2\OauthConsumer;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 class OauthController extends ApiController {
@@ -11,13 +15,18 @@ class OauthController extends ApiController {
 	 */
 	public function createConsumer()
 	{
-		// TODO: make route, check password, throw 403, generate random strings and such, save, return
-
         $payload = $this->getRequestPayloadItem();
-        $consumer = new OauthConsumer($payload);
-        $consumer->save();
 
-        return Response::json(['consumer' => $consumer, 'input_seen' => $payload]);
+        // First, ensure that request has permission to create new oauth consumers
+        if (Hash::check($payload['authority'], Config::get('agrarify.consumer_creation_authority')))
+        {
+            $consumer = new OauthConsumer($payload);
+            $consumer->save();
+            return Response::json(['consumer' => $consumer, 'input_seen' => $payload]);
+        }
+
+        // If insufficient permission, return an error
+        return $this->sendErrorForbiddenResponse(['message' => 'Insufficient authority to perform this action.']);
 	}
 
     /**

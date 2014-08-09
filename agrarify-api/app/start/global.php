@@ -1,4 +1,5 @@
 <?php
+use Agrarify\Api\Exception\ApiErrorException;
 use Illuminate\Http\Response as HttpResponse;
 
 /*
@@ -47,24 +48,28 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 |
 */
 
+App::error(function(ApiErrorException $exception, $code) {
+    return Response::json($exception->getErrors(), $exception->getHttpStatusCode());
+});
+
 App::error(function(Symfony\Component\HttpKernel\Exception\HttpException $exception, $code) {
     $message = $exception->getMessage() ?: 'Please refer to status code.';
     return Response::json(
-        ['errors' => ['message' => $message]],
+        ['errors' => ['message' => $message, 'code' => ApiErrorException::ERROR_CODE_NO_CODE_ASSIGNED]],
         $exception->getStatusCode()
     );
 });
 
 App::error(function(\Whoops\Exception\ErrorException $exception, $code) {
     return Response::json(
-        ['errors' => ['message' => $exception->getMessage()]],
+        ['errors' => ['message' => $exception->getMessage(), 'code' => ApiErrorException::ERROR_CODE_NO_CODE_ASSIGNED]],
         HttpResponse::HTTP_INTERNAL_SERVER_ERROR
     );
 });
 
 App::fatal(function($exception) {
     return Response::json(
-        ['errors' => ['message' => $exception->getMessage()]],
+        ['errors' => ['message' => $exception->getMessage(), 'code' => ApiErrorException::ERROR_CODE_NO_CODE_ASSIGNED]],
         HttpResponse::HTTP_INTERNAL_SERVER_ERROR
     );
 });
