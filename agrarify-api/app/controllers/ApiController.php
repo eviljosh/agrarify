@@ -1,10 +1,19 @@
 <?php
 
 use Agrarify\Api\Exception\ApiErrorException;
+use Agrarify\Transformers\AgrarifyTransformer;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class ApiController extends BaseController {
+
+    /**
+     * The transformer to be used.  Each child class should set this appropriately.
+     *
+     * @var AgrarifyTransformer
+     */
+    var $transformer;
 
     /**
      * @return array
@@ -15,21 +24,47 @@ class ApiController extends BaseController {
         $payload = Request::all();
         if (is_array($payload) and array_key_exists('item', $payload))
         {
-            return $payload['item'];
+            return $this->transformer->transformInput($payload['item']);
         }
 
-        throw new ApiErrorException(HttpResponse::HTTP_BAD_REQUEST, [
-            'message' => 'Unable to find or parse request payload. Is your Content-Type set correctly?'
-        ]);
+        throw new ApiErrorException(
+            ['message' => 'Unable to find or parse request payload. Is your Content-Type set correctly?'],
+            HttpResponse::HTTP_BAD_REQUEST
+        );
     }
 
     /**
-     * @param int $http_status HTTP status code
+     * @param mixed $payload The Model object or Collection to send
+     * @param int $http_status
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendSuccessResponse($payload, $http_status = HttpResponse::HTTP_OK)
+    {
+        $json_payload = '';
+
+        if ($payload instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $json_payload = [
+                $this->transformer->getSingularName() => $this->transformer->transform($payload->toArray())
+            ];
+        }
+        else
+        {
+            $json_payload = [
+                $this->transformer->getPluralName() => $this->transformer->transformCollection($payload->toArray())
+            ];
+        }
+
+        return Response::json($json_payload, $http_status);
+    }
+
+    /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
+     * @param int $http_status HTTP status code
      *
      * @return Response
      */
-    protected function sendErrorResponse($http_status, $errors = [])
+    protected function sendErrorResponse($errors = [], $http_status = HttpResponse::HTTP_BAD_REQUEST)
     {
         // if we've been given a single error, transform it into an array of one error element
         if (!isset($errors[0]) or !is_array($errors[0]))
@@ -60,7 +95,7 @@ class ApiController extends BaseController {
      */
     protected function sendErrorForbiddenResponse($errors = [])
     {
-        return $this->sendErrorResponse(HttpResponse::HTTP_FORBIDDEN, $errors);
+        return $this->sendErrorResponse($errors, HttpResponse::HTTP_FORBIDDEN);
     }
 
 }

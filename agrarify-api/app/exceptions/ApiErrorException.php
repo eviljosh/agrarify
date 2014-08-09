@@ -2,6 +2,8 @@
 
 namespace Agrarify\Api\Exception;
 
+use Illuminate\Http\Response as HttpResponse;
+
 /**
  * Agrarify API error exception
  */
@@ -20,10 +22,10 @@ class ApiErrorException extends \Exception
     var $http_status;
 
     /**
-     * @param int $http_status HTTP status code
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
+     * @param int $http_status HTTP status code
      */
-    public function __construct($http_status, $errors = [])
+    public function __construct($errors = [], $http_status = HttpResponse::HTTP_BAD_REQUEST)
     {
         // if we've been given a single error, transform it into an array of one error element
         if (!isset($errors[0]) or !is_array($errors[0]))

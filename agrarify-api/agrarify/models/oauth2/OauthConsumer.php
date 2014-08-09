@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class OauthConsumer extends Model {
 
+
+
     /**
      * Create a new OauthConsumer model instance.
      *

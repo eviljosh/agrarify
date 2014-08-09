@@ -1,6 +1,8 @@
 <?php
 use Agrarify\Api\Exception\ApiErrorException;
 use Agrarify\Models\Oauth2\OauthConsumer;
+use Agrarify\Transformers\AgrarifyTransformer;
+use Agrarify\Transformers\OauthConsumerTransformer;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -8,21 +10,42 @@ use Illuminate\Support\Facades\Response;
 
 class OauthController extends ApiController {
 
-	/**
+    /**
+     * @var AgrarifyTransformer
+     */
+    var $consumer_transformer;
+
+    /**
+     * @var AgrarifyTransformer
+     */
+    var $token_transformer;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->consumer_transformer =  new OauthConsumerTransformer();
+        // TODO - token transformer
+    }
+
+    /**
 	 * Creates an oauth2 consumer
 	 *
 	 * @return Response
 	 */
 	public function createConsumer()
 	{
+        $this->transformer = $this->consumer_transformer;
         $payload = $this->getRequestPayloadItem();
 
         // First, ensure that request has permission to create new oauth consumers
         if (Hash::check($payload['authority'], Config::get('agrarify.consumer_creation_authority')))
         {
             $consumer = new OauthConsumer($payload);
+            // TODO - validate! (by adding a base model, I think, and a baseController function that calls it and throws an API error is it doesn't work)
             $consumer->save();
-            return Response::json(['consumer' => $consumer, 'input_seen' => $payload]);
+            return $this->sendSuccessResponse($consumer);
         }
 
         // If insufficient permission, return an error
