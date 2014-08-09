@@ -13,7 +13,7 @@ class ApiController extends BaseController {
      *
      * @var AgrarifyTransformer
      */
-    var $transformer;
+    protected $transformer;
 
     /**
      * @return array
@@ -96,6 +96,32 @@ class ApiController extends BaseController {
     protected function sendErrorForbiddenResponse($errors = [])
     {
         return $this->sendErrorResponse($errors, HttpResponse::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @param Agrarify\Models\BaseModel $model
+     * @throws Agrarify\Api\Exception\ApiErrorException;
+     */
+    protected function assertValid($model)
+    {
+        try
+        {
+            $model->assertValid();
+        }
+        catch(Agrarify\Exception\ValidationException $e)
+        {
+            $messages = [];
+            foreach ($e->getValidationErrors() as $error)
+            {
+                $strArray = explode(' ',$error);
+                $field_name = $strArray[1];
+
+                $message = $field_name . ' - ' . $error;
+                $messages[] = ['message' => $message, 'code' => ApiErrorException::ERROR_CODE_VALIDATION];
+            }
+
+            throw new ApiErrorException($messages, HttpResponse::HTTP_BAD_REQUEST);
+        }
     }
 
 }

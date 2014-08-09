@@ -4,15 +4,13 @@ namespace Agrarify\Transformers;
 
 class OauthConsumerTransformer extends AgrarifyTransformer
 {
-
-    const TYPE_MOBILE = 'M';
-
     /**
-     * The name used for a collection of model records.
-     *
-     * @var string
+     * Constructor
      */
-    var $plural_name = 'oauthConsumers';
+    public function __construct()
+    {
+        $this->plural_name = 'oauthConsumers';
+    }
 
     /**
      * Transforms a single model record.

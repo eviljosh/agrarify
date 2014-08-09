@@ -13,12 +13,12 @@ class OauthController extends ApiController {
     /**
      * @var AgrarifyTransformer
      */
-    var $consumer_transformer;
+    private $consumer_transformer;
 
     /**
      * @var AgrarifyTransformer
      */
-    var $token_transformer;
+    private $token_transformer;
 
     /**
      * Constructor
@@ -43,7 +43,7 @@ class OauthController extends ApiController {
         if (Hash::check($payload['authority'], Config::get('agrarify.consumer_creation_authority')))
         {
             $consumer = new OauthConsumer($payload);
-            // TODO - validate! (by adding a base model, I think, and a baseController function that calls it and throws an API error is it doesn't work)
+            $this->assertValid($consumer);
             $consumer->save();
             return $this->sendSuccessResponse($consumer);
         }

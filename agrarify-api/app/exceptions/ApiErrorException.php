@@ -10,16 +10,17 @@ use Illuminate\Http\Response as HttpResponse;
 class ApiErrorException extends \Exception
 {
     const ERROR_CODE_NO_CODE_ASSIGNED = 999;
+    const ERROR_CODE_VALIDATION = 11;
 
     /**
      * @var array List of errors of form [ ['message' => 'message', 'code' => 'number'], ...]
      */
-    var $errors = [];
+    private $errors = [];
 
     /**
      * @var int HTTP status code desired for response
      */
-    var $http_status;
+    private $http_status;
 
     /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]

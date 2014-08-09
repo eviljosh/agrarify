@@ -16,14 +16,14 @@ abstract class AgrarifyTransformer
      *
      * @var string
      */
-    var $singular_name = 'item';
+    protected $singular_name = 'item';
 
     /**
      * The name used for a collection of model records. Child classes must override.
      *
      * @var string
      */
-    var $plural_name = '';
+    protected $plural_name = '';
 
     /**
      * Transforms a collection of model records.
