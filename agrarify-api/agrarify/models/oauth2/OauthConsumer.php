@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class OauthConsumer extends Model {
 
-    function __construct() {
-        parent::__construct();
+    /**
+     * Create a new OauthConsumer model instance.
+     *
+     * @param array $attributes
+     */
+    function __construct(array $attributes = array()) {
+        parent::__construct($attributes);
         $this->consumer_id = str_random(40);
         $this->consumer_secret = str_random(42);
     }
@@ -17,7 +22,7 @@ class OauthConsumer extends Model {
      *
      * @var string
      */
-    protected $table = 'oauth_consumer';
+    protected $table = 'oauth_consumers';
 
     /**
      * Validation rules for the model
@@ -34,6 +39,10 @@ class OauthConsumer extends Model {
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'description',
+        'name',
+        'type'
+    ];
 
 }

@@ -1,5 +1,6 @@
 <?php
 use Agrarify\Models\Oauth2\OauthConsumer;
+use Illuminate\Support\Facades\Response;
 
 class OauthController extends ApiController {
 
@@ -12,9 +13,11 @@ class OauthController extends ApiController {
 	{
 		// TODO: make route, check password, throw 403, generate random strings and such, save, return
 
-        $consumer = new OauthConsumer();
-        return Response::json($consumer);
-        //return Response::json('Hello there this is createConsumer...');
+        $payload = $this->getRequestPayloadItem();
+        $consumer = new OauthConsumer($payload);
+        $consumer->save();
+
+        return Response::json(['consumer' => $consumer, 'input_seen' => $payload]);
 	}
 
     /**

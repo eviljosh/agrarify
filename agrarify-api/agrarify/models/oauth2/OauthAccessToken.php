@@ -9,7 +9,7 @@ class OauthAccessToken extends Eloquent {
      *
      * @var string
      */
-    protected $table = 'oauth_access_token';
+    protected $table = 'oauth_access_tokens';
 
     /**
      * Validation rules for the model
