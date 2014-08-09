@@ -2,7 +2,12 @@
 
 namespace Agrarify\Models\Accounts;
 
-class Account extends Eloquent {
+use Agrarify\Models\BaseModel;
+use Illuminate\Support\Facades\Hash;
+
+class Account extends BaseModel {
+
+    const CREATE_CODE_MOBILE_APP = 'M';
 
     /**
      * The database table used by the model.
@@ -27,5 +32,23 @@ class Account extends Eloquent {
      * @var array
      */
     protected $fillable = [];
+
+    /**
+     * @param string $password_text
+     * @return bool
+     */
+    public function isPasswordValid($password_text)
+    {
+        return Hash::check($password_text, $this->password);
+    }
+
+    /**
+     * @param $email_address
+     * @return Account
+     */
+    public static function fetchByEmail($email_address)
+    {
+        return self::firstByAttributes(['email_address' => $email_address]);
+    }
 
 }

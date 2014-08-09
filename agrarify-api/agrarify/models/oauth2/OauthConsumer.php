@@ -9,18 +9,6 @@ class OauthConsumer extends BaseModel {
     const TYPE_MOBILE = 'M';
 
     /**
-     * Create a new OauthConsumer model instance.
-     *
-     * @param array $attributes
-     */
-    function __construct(array $attributes = array()) {
-        parent::__construct($attributes);
-        $this->consumer_id = str_random(40);
-        $this->consumer_secret = str_random(42);
-        $this->type = self::TYPE_MOBILE; // default to mobile consumer
-    }
-
-    /**
      * The database table used by the model.
      *
      * @var string
@@ -51,5 +39,26 @@ class OauthConsumer extends BaseModel {
         'name',
         'type'
     ];
+
+    /**
+     * Create a new OauthConsumer model instance.
+     *
+     * @param array $attributes
+     */
+    function __construct(array $attributes = array()) {
+        parent::__construct($attributes);
+        $this->consumer_id = str_random(40);
+        $this->consumer_secret = str_random(42);
+        $this->type = self::TYPE_MOBILE; // default to mobile consumer
+    }
+
+    /**
+     * @param string $consumer_id
+     * @return OauthConsumer
+     */
+    public static function fetchByConsumerId($consumer_id)
+    {
+        return self::firstByAttributes(['consumer_id' => $consumer_id]);
+    }
 
 }

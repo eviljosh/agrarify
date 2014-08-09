@@ -19,8 +19,9 @@ class CreateInitialSchema extends Migration {
 			$table->string('surname', 50)->nullable();
 			$table->string('password', 100)->nullable();
             $table->string('email_address', 100)->nullable();
+            $table->string('create_code', 1);
             $table->string('verification_code', 1)->nullable();
-            $table->timestamp('verification_timestamp');
+            $table->timestamp('verification_timestamp')->nullable();
 			$table->timestamps();
             $table->unique('email_address');
 		});

@@ -19,7 +19,7 @@ class ApiController extends BaseController {
      * @return array
      * @throws Agrarify\Api\Exception\ApiErrorException
      */
-    protected function getRequestPayloadItem()
+    protected function assertRequestPayloadItem()
     {
         $payload = Request::all();
         if (is_array($payload) and array_key_exists('item', $payload))
@@ -96,6 +96,24 @@ class ApiController extends BaseController {
     protected function sendErrorForbiddenResponse($errors = [])
     {
         return $this->sendErrorResponse($errors, HttpResponse::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
+     * @return Response
+     */
+    protected function sendErrorUnauthorizedResponse($errors = [])
+    {
+        return $this->sendErrorResponse($errors, HttpResponse::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
+     * @return Response
+     */
+    protected function sendErrorBadRequestResponse($errors = [])
+    {
+        return $this->sendErrorResponse($errors, HttpResponse::HTTP_BAD_REQUEST);
     }
 
     /**

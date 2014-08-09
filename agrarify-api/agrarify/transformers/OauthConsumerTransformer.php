@@ -9,24 +9,24 @@ class OauthConsumerTransformer extends AgrarifyTransformer
      */
     public function __construct()
     {
-        $this->plural_name = 'oauthConsumers';
+        $this->plural_name = 'oauth_consumers';
     }
 
     /**
      * Transforms a single model record.
      *
-     * @param array $consumer
+     * @param array $access_token
      * @return array
      */
-    public function transform($consumer)
+    public function transform($access_token)
     {
         return [
-            'id'              => (int) $this->getArrayValueOrDefault($consumer, 'id', -1),
-            'name'            => $this->getArrayValueOrDefault($consumer, 'name'),
-            'description'     => $this->getArrayValueOrDefault($consumer, 'description'),
-            'type'            => $this->getArrayValueOrDefault($consumer, 'type'),
-            'consumer_id'     => $this->getArrayValueOrDefault($consumer, 'consumer_id'),
-            'consumer_secret' => $this->getArrayValueOrDefault($consumer, 'consumer_secret'),
+            'id'              => (int) $this->getArrayValueOrDefault($access_token, 'id', -1),
+            'name'            => $this->getArrayValueOrDefault($access_token, 'name'),
+            'description'     => $this->getArrayValueOrDefault($access_token, 'description'),
+            'type'            => $this->getArrayValueOrDefault($access_token, 'type'),
+            'consumer_id'     => $this->getArrayValueOrDefault($access_token, 'consumer_id'),
+            'consumer_secret' => $this->getArrayValueOrDefault($access_token, 'consumer_secret'),
         ];
     }
 

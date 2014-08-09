@@ -1,14 +1,25 @@
 <?php
-use Agrarify\Api\Exception\ApiErrorException;
+use Agrarify\Models\Accounts\Account;
+use Agrarify\Models\Oauth2\OauthAccessToken;
 use Agrarify\Models\Oauth2\OauthConsumer;
 use Agrarify\Transformers\AgrarifyTransformer;
+use Agrarify\Transformers\OauthAccessTokenTransformer;
 use Agrarify\Transformers\OauthConsumerTransformer;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 class OauthController extends ApiController {
+
+    /**
+     * List of supported oauth grant types
+     *
+     * @var array
+     */
+    private static $supported_oauth_grant_types = [
+        'password',
+        'new',
+    ];
 
     /**
      * @var AgrarifyTransformer
@@ -26,7 +37,7 @@ class OauthController extends ApiController {
     public function __construct()
     {
         $this->consumer_transformer =  new OauthConsumerTransformer();
-        // TODO - token transformer
+        $this->token_transformer = new OauthAccessTokenTransformer();
     }
 
     /**
@@ -37,7 +48,7 @@ class OauthController extends ApiController {
 	public function createConsumer()
 	{
         $this->transformer = $this->consumer_transformer;
-        $payload = $this->getRequestPayloadItem();
+        $payload = $this->assertRequestPayloadItem();
 
         // First, ensure that request has permission to create new oauth consumers
         if (Hash::check($payload['authority'], Config::get('agrarify.consumer_creation_authority')))
@@ -59,7 +70,57 @@ class OauthController extends ApiController {
      */
     public function createAccessToken()
     {
-        // TODO: make route, check consumer id, throw 401, generate empty account if needed, check account credentials otherwise, generate random strings and such, save, return
+        $this->transformer = $this->token_transformer;
+        $payload = $this->assertRequestPayloadItem();
+
+        // First, make sure consumer_id is valid
+        $consumer = null;
+        if (!isset($payload['consumer_id']) or !($consumer = OauthConsumer::fetchByConsumerId($payload['consumer_id'])))
+        {
+            return $this->sendErrorUnauthorizedResponse(['message' => 'Oauth consumer not authorized.']);
+        }
+
+        // Second, check the grant type
+        $grant_type = isset($payload['grant_type']) ? strtolower($payload['grant_type']) : 'none';
+        if (!in_array($grant_type, self::$supported_oauth_grant_types))
+        {
+            return $this->sendErrorBadRequestResponse(['message' => 'Grant type [' . $grant_type . '] not supported.']);
+        }
+
+        // Third, create or validate account
+        $account = null;
+        if ($grant_type == 'new')
+        {
+            $account = new Account();
+            $account->create_code = Account::CREATE_CODE_MOBILE_APP;
+            $account->save();
+        }
+        elseif ($grant_type == 'password')
+        {
+            $account = null;
+
+            if (!isset($payload['username']) or
+                !isset($payload['password']) or
+                !($account = Account::fetchByEmail($payload['username'])) or
+                !$account->isPasswordValid($payload['password']))
+            {
+                return $this->sendErrorForbiddenResponse(['message' => 'Username and password do not match.']);
+            }
+        }
+
+        // Fourth, see if a token already exists, else create one
+        $access_token = OauthAccessToken::fetchByAccountAndConsumer($account, $consumer);
+        if (!$access_token)
+        {
+            $access_token = new OauthAccessToken();
+            $access_token->account_id = $account->id;
+            $access_token->oauth_consumer_id = $consumer->id;
+            $this->assertValid($access_token);
+            $access_token->save();
+        }
+
+        // Finally, return the token
+        return $this->sendSuccessResponse($access_token);
     }
 
 }
