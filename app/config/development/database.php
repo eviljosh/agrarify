@@ -24,7 +24,7 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'agrarify',
-			'username'  => 'forge-dev',
+			'username'  => 'forge',
 			'password'  => 'CCddS7hS0IMgtpN0oiFX',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
