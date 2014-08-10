@@ -24,9 +24,13 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(function(){
-    return getenv('AGRARIFY_ENV');
-});
+//$env = $app->detectEnvironment(function(){
+//    return getenv('AGRARIFY_ENV');
+//});
+$env = $app->detectEnvironment(array(
+    'local' => ['badger'],
+    'development' => ['solitary-shelter'],
+));
 
 /*
 |--------------------------------------------------------------------------
