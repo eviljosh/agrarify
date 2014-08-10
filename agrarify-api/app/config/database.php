@@ -46,16 +46,16 @@ return array(
 
 	'connections' => array(
 
-		'sqlite' => array(
-			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/production.sqlite',
-			'prefix'   => '',
-		),
+//		'sqlite' => array(
+//			'driver'   => 'sqlite',
+//			'database' => __DIR__.'/../database/production.sqlite',
+//			'prefix'   => '',
+//		),
 
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'forge',
+			'database'  => 'forge-prod',
 			'username'  => 'forge-prod',
 			'password'  => '',
 			'charset'   => 'utf8',
@@ -63,25 +63,25 @@ return array(
 			'prefix'    => '',
 		),
 
-		'pgsql' => array(
-			'driver'   => 'pgsql',
-			'host'     => 'localhost',
-			'database' => 'forge',
-			'username' => 'forge',
-			'password' => '',
-			'charset'  => 'utf8',
-			'prefix'   => '',
-			'schema'   => 'public',
-		),
+//		'pgsql' => array(
+//			'driver'   => 'pgsql',
+//			'host'     => 'localhost',
+//			'database' => 'forge',
+//			'username' => 'forge',
+//			'password' => '',
+//			'charset'  => 'utf8',
+//			'prefix'   => '',
+//			'schema'   => 'public',
+//		),
 
-		'sqlsrv' => array(
-			'driver'   => 'sqlsrv',
-			'host'     => 'localhost',
-			'database' => 'database',
-			'username' => 'root',
-			'password' => '',
-			'prefix'   => '',
-		),
+//		'sqlsrv' => array(
+//			'driver'   => 'sqlsrv',
+//			'host'     => 'localhost',
+//			'database' => 'database',
+//			'username' => 'root',
+//			'password' => '',
+//			'prefix'   => '',
+//		),
 
 	),
 
