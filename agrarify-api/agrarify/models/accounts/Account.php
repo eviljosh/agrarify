@@ -22,16 +22,34 @@ class Account extends BaseModel {
      * @var array
      */
     public static $rules = [
-        // 'title' => 'required'
+        'given_name'             => 'max:50',
+        'surname'                => 'max:50',
+        'email_address'          => 'max:100|email|unique:accounts,email_address',
+        'create_code'            => 'max:1',
+        'verification_code'      => 'max:1',
+        'verification_timestamp' => '',
     ];
 
-    // Don't forget to fill this array
     /**
      * Indicates which fields can be mass assigned
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'given_name',
+        'surname',
+        'email_address',
+    ];
+
+    /**
+     * Defines the one-to-many relationship with oauth access tokens
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function oauth_access_tokens()
+    {
+        return $this->hasMany('Agrarify\Models\Oauth2\OauthAccessToken');
+    }
 
     /**
      * @param string $password_text
@@ -40,6 +58,14 @@ class Account extends BaseModel {
     public function isPasswordValid($password_text)
     {
         return Hash::check($password_text, $this->password);
+    }
+
+    /**
+     * @param string $password_text
+     */
+    public function hashAndSetPassword($password_text)
+    {
+        $this->password = Hash::make($password_text, ['rounds' => 13]);
     }
 
     /**

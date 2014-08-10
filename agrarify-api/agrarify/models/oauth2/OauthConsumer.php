@@ -28,7 +28,6 @@ class OauthConsumer extends BaseModel {
         'type'            => 'max:1',
     ];
 
-    // Don't forget to fill this array
     /**
      * Indicates which fields can be mass assigned
      *
@@ -45,11 +44,22 @@ class OauthConsumer extends BaseModel {
      *
      * @param array $attributes
      */
-    function __construct(array $attributes = array()) {
+    function __construct(array $attributes = array())
+    {
         parent::__construct($attributes);
         $this->consumer_id = str_random(40);
         $this->consumer_secret = str_random(42);
         $this->type = self::TYPE_MOBILE; // default to mobile consumer
+    }
+
+    /**
+     * Defines the one-to-many relationship with oauth access tokens
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function oauth_access_tokens()
+    {
+        return $this->hasMany('Agrarify\Models\Oauth2\OauthAccessToken');
     }
 
     /**

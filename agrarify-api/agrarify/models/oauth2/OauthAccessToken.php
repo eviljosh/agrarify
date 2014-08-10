@@ -25,7 +25,6 @@ class OauthAccessToken extends BaseModel {
         'account_id' => 'required|numeric',
     ];
 
-    // Don't forget to fill this array
     /**
      * Indicates which fields can be mass assigned
      *
@@ -38,9 +37,30 @@ class OauthAccessToken extends BaseModel {
      *
      * @param array $attributes
      */
-    function __construct(array $attributes = array()) {
+    function __construct(array $attributes = array())
+    {
         parent::__construct($attributes);
         $this->token = str_random(40);
+    }
+
+    /**
+     * Defines the many-to-one relationship with accounts
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function account()
+    {
+        return $this->belongsTo('Agrarify\Models\Accounts\Account');
+    }
+
+    /**
+     * Defines the many-to-one relationship with oauth consumers
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function oauth_consumer()
+    {
+        return $this->belongsTo('Agrarify\Models\Oauth2\OauthConsumer');
     }
 
     /**
@@ -54,6 +74,15 @@ class OauthAccessToken extends BaseModel {
             'account_id' => $account->id,
             'oauth_consumer_id' => $consumer->id,
         ]);
+    }
+
+    /**
+     * @param $token_string
+     * @return OauthAccessToken
+     */
+    public static function fetchByToken($token_string)
+    {
+        return self::firstByAttributes(['token' => $token_string]);
     }
 
 }

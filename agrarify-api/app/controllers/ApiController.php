@@ -5,6 +5,7 @@ use Agrarify\Transformers\AgrarifyTransformer;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 class ApiController extends BaseController {
 
@@ -117,6 +118,19 @@ class ApiController extends BaseController {
     }
 
     /**
+     * @return Response
+     */
+    protected function sendErrorNotImplementedResponse()
+    {
+        return $this->sendErrorResponse(['message' => 'Not yet implemented.'], HttpResponse::HTTP_NOT_IMPLEMENTED);
+    }
+
+    protected function sendErrorNotFoundResponse()
+    {
+        return $this->sendErrorResponse(['message' => 'Specified resource not found.'], HttpResponse::HTTP_NOT_FOUND);
+    }
+
+    /**
      * @param Agrarify\Models\BaseModel $model
      * @throws Agrarify\Api\Exception\ApiErrorException;
      */
@@ -129,17 +143,30 @@ class ApiController extends BaseController {
         catch(Agrarify\Exception\ValidationException $e)
         {
             $messages = [];
-            foreach ($e->getValidationErrors() as $error)
+            foreach ($e->getValidationErrors() as $field_name => $errors)
             {
-                $strArray = explode(' ',$error);
-                $field_name = $strArray[1];
-
-                $message = $field_name . ' - ' . $error;
+                $message = $field_name . ' - ' . $errors[0];
                 $messages[] = ['message' => $message, 'code' => ApiErrorException::ERROR_CODE_VALIDATION];
             }
 
             throw new ApiErrorException($messages, HttpResponse::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * @return Agrarify\Models\Accounts\Account
+     */
+    protected function getAccount()
+    {
+        return Session::get('account');
+    }
+
+    /**
+     * @return Agrarify\Models\Oauth2\OauthAccessToken
+     */
+    protected function getAccessToken()
+    {
+        return Session::get('access_token');
     }
 
 }

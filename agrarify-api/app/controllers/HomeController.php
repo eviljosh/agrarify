@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Response;
+
 class HomeController extends ApiController {
 
 	/*
@@ -19,5 +22,18 @@ class HomeController extends ApiController {
 	{
 		return View::make('hello');
 	}
+
+    public function showBasicStatus()
+    {
+        $account = \Agrarify\Models\Accounts\Account::take(1)->get();
+        if ($account)
+        {
+            return Response::json(['status' => 'ok'], HttpResponse::HTTP_OK);
+        }
+        else
+        {
+            return Response::json(['status' => 'could not find account in database'], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

@@ -39,7 +39,8 @@ class BaseModel extends Model
 
         if ($validator->fails())
         {
-            $this->validation_errors = $validator->messages()->all();
+            //$this->validation_errors = $validator->messages()->all();
+            $this->validation_errors = $validator->messages()->toArray();
             return false;
         }
         return true;

@@ -20,7 +20,6 @@ class Email extends Eloquent {
         // 'title' => 'required'
     ];
 
-    // Don't forget to fill this array
     /**
      * Indicates which fields can be mass assigned
      *

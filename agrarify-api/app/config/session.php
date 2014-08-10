@@ -16,7 +16,8 @@ return array(
 	|
 	*/
 
-	'driver' => 'memcached',
+	//'driver' => 'memcached',
+    'driver' => 'array', // using array for now, because we don't want data persisted across multiple API calls
 
 	/*
 	|--------------------------------------------------------------------------

@@ -1,5 +1,9 @@
 <?php
 
+use Agrarify\Api\Exception\ApiErrorException;
+use Agrarify\Models\Oauth2\OauthAccessToken;
+use Illuminate\Http\Response as HttpResponse;
+
 /*
 |--------------------------------------------------------------------------
 | Application & Route Filters
@@ -24,7 +28,57 @@ App::after(function($request, $response)
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Filters
+| Agrarify Authentication Filters
+|--------------------------------------------------------------------------
+|
+| The following filters are used to verify that the request contains a valid
+| oauth access token, and store the account and token used.
+|
+*/
+
+Route::filter('agrarify.api.auth', function()
+{
+    $request_is_authorized = false;
+    $authorization = Request::header('Authorization');
+
+    if ($authorization)
+    {
+        $auth_parts = explode(' ', $authorization);
+
+        if (sizeof($auth_parts) == 2)
+        {
+            $auth_type = $auth_parts[0];
+            $auth_token = $auth_parts[1];
+
+            if ($auth_type == 'Bearer')
+            {
+                $token = OauthAccessToken::fetchByToken($auth_token);
+
+                if ($token)
+                {
+                    $account = $token->account;
+                    Session::put('account', $account);
+                    Session::put('access_token', $token);
+                    $request_is_authorized = true;
+                }
+            }
+        }
+
+    }
+
+    if (!$request_is_authorized)
+    {
+        throw new ApiErrorException(
+            ['message' => 'Bearer token not present or not authorized.'],
+            HttpResponse::HTTP_UNAUTHORIZED
+        );
+    }
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Laravel Default Authentication Filters
 |--------------------------------------------------------------------------
 |
 | The following filters are used to verify that the user of the current

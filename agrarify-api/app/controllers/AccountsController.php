@@ -1,97 +1,88 @@
 <?php
 
+use Agrarify\Models\Accounts\Account;
+use Agrarify\Transformers\AccountTransformer;
+use Illuminate\Support\Facades\Response;
+
 class AccountsController extends ApiController {
 
-	/**
-	 * Display a listing of accounts
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$accounts = Account::all();
-
-		return View::make('accounts.index', compact('accounts'));
-	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->transformer = new AccountTransformer();
+    }
 
 	/**
-	 * Show the form for creating a new accounts
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return View::make('accounts.create');
-	}
-
-	/**
-	 * Store a newly created accounts in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = Input::all(), Account::$rules);
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		Account::create($data);
-
-		return Redirect::route('accounts.index');
-	}
-
-	/**
-	 * Display the specified accounts.
+	 * HTTP GET
+     * Display the specified account.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function show($id)
 	{
-		$account = Account::findOrFail($id);
-
-		return View::make('accounts.show', compact('accounts'));
+        if ($id != 'me')
+        {
+            return $this->sendErrorNotFoundResponse();
+        }
+        return $this->sendSuccessResponse($this->getAccount());
 	}
 
 	/**
-	 * Show the form for editing the specified accounts.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$account = Account::find($id);
-
-		return View::make('accounts.edit', compact('accounts'));
-	}
-
-	/**
-	 * Update the specified accounts in storage.
+	 * HTTP PUT
+     * Update the specified account in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		$account = Account::findOrFail($id);
+        if ($id != 'me')
+        {
+            return $this->sendErrorNotFoundResponse();
+        }
 
-		$validator = Validator::make($data = Input::all(), Account::$rules);
+        $payload = $this->assertRequestPayloadItem();
+        $account = $this->getAccount();
 
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
+        // We validate emails as unique, so we need to do a little dance to avoid trying to revalidate the existing one.
+        $should_validate_email = true;
+        if (!isset($payload['email_address']) or strtolower($payload['email_address']) == strtolower($account->email_address))
+        {
+            $should_validate_email = false;
+        }
 
-		$account->update($data);
+        // Update the account instance.
+        $account->fill($payload);
 
-		return Redirect::route('accounts.index');
+        // Handle password updates separately since they must be hashed.
+        if (isset($payload['password']) and strlen($payload['password']) > 0)
+        {
+            $account->hashAndSetPassword($payload['password']);
+        }
+
+        // Validate the account instance
+        if ($should_validate_email)
+        {
+            $this->assertValid($account);
+        }
+        else
+        {
+            $current_email = $account->email_address;
+            $account->email_address = null;
+            $this->assertValid($account);
+            $account->email_address = $current_email;
+        }
+
+        // Save and return the updated account.
+        $account->save();
+        return $this->sendSuccessResponse($account);
 	}
 
 	/**
+     * HTTP DELETE
 	 * Remove the specified accounts from storage.
 	 *
 	 * @param  int  $id
@@ -99,9 +90,12 @@ class AccountsController extends ApiController {
 	 */
 	public function destroy($id)
 	{
-		Account::destroy($id);
-
-		return Redirect::route('accounts.index');
+        if ($id != 'me')
+        {
+            return $this->sendErrorNotFoundResponse();
+        }
+		// TODO: implement, once we know what will need to be done upon account deletion
+        return $this->sendErrorNotImplementedResponse();
 	}
 
 }
