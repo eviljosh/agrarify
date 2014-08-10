@@ -26,13 +26,17 @@ class HomeController extends ApiController {
     public function showBasicStatus()
     {
         $account = \Agrarify\Models\Accounts\Account::take(1)->get();
-        if ($account)
+        $environment = App::environment();
+        if ($account and $environment)
         {
-            return Response::json(['status' => 'ok'], HttpResponse::HTTP_OK);
+            return Response::json(['status' => 'ok', 'environment' => $environment], HttpResponse::HTTP_OK);
         }
         else
         {
-            return Response::json(['status' => 'could not find account in database'], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::json([
+                    'status' => 'could not find account in database',
+                    'environment' => $environment
+                ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
