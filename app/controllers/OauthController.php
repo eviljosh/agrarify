@@ -75,7 +75,7 @@ class OauthController extends ApiController {
 
         // First, make sure consumer_id is valid
         $consumer = null;
-        if (!isset($payload['consumer_id']) or !($consumer = OauthConsumer::fetchByConsumerId($payload['consumer_id'])))
+        if (!isset($payload['client_id']) or !($consumer = OauthConsumer::fetchByConsumerId($payload['client_id'])))
         {
             return $this->sendErrorUnauthorizedResponse(['message' => 'Oauth consumer not authorized.']);
         }
