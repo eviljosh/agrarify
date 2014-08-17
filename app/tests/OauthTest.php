@@ -1,8 +1,14 @@
 <?php
 
-class ExampleTest extends TestCase {
+class OuathTest extends ApiTestCase {
 
-	/**
+    public function testConsumerCreation()
+    {
+
+    }
+
+
+    /**
 	 * A basic functional test example.
 	 *
 	 * @return void
