@@ -52,6 +52,16 @@ class Account extends BaseModel {
     }
 
     /**
+     * Defines the one-to-one relationship with account profiles
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function account_profile()
+    {
+        return $this->hasOne('Agrarify\Models\Accounts\AccountProfile');
+    }
+
+    /**
      * @param string $password_text
      * @return bool
      */

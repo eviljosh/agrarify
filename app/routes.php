@@ -30,4 +30,5 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
 
     Route::resource('accounts', 'AccountsController');
 
+
 });
