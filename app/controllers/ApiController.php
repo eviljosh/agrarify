@@ -46,7 +46,7 @@ class ApiController extends BaseController {
         if ($payload instanceof \Illuminate\Database\Eloquent\Model)
         {
             $json_payload = [
-                $this->transformer->getSingularName() => $this->transformer->transform($payload->toArray())
+                $this->transformer->getSingularName() => $this->transformer->transform($payload)
             ];
         }
         else
