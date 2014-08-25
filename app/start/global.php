@@ -74,10 +74,10 @@ App::fatal(function($exception) {
     );
 });
 
-App::error(function(Exception $exception, $code)
-{
-	Log::error($exception);
-});
+//App::error(function(Exception $exception, $code)
+//{
+//	Log::error($exception);
+//});
 
 /*
 |--------------------------------------------------------------------------

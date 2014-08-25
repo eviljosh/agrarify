@@ -65,6 +65,22 @@ class OauthAccessToken extends BaseModel {
 
     /**
      * @param Account $account
+     */
+    public function setAccount($account)
+    {
+        $this->account_id = $account->id;
+    }
+
+    /**
+     * @param OauthConsumer $consumer
+     */
+    public function setOauthConsumer($consumer)
+    {
+        $this->oauth_consumer_id = $consumer->id;
+    }
+
+    /**
+     * @param Account $account
      * @param OauthConsumer $consumer
      * @return OauthAccessToken
      */
