@@ -39,7 +39,7 @@ abstract class AgrarifyTransformer
     /**
      * Transforms a single model record.
      *
-     * @param array $item
+     * @param \Agrarify\Models\BaseModel $item
      * @return array
      */
     public abstract function transform($item);
@@ -77,18 +77,18 @@ abstract class AgrarifyTransformer
     }
 
     /**
-     * Helper method to get an array value for a specified key, or return a default value if that key isn't present.
+     * Helper method to get an object parameter, or return a default value if that parameter isn't present.
      *
-     * @param array $array
-     * @param string $key
+     * @param \Agrarify\Models\BaseModel $item
+     * @param string $param
      * @param mixed $default
      * @return mixed
      */
-    protected function getArrayValueOrDefault($array, $key, $default = '')
+    protected function getValueOrDefault($item, $param, $default = '')
     {
-        if (isset($array[$key]))
+        if (isset($item->$param))
         {
-            return $array[$key];
+            return $item->$param;
         }
         return $default;
     }

@@ -67,4 +67,43 @@ class AccountProfile extends BaseModel {
         return $this->belongsTo('Agrarify\Models\Accounts\Account');
     }
 
+    /**
+     * @return \Agrarify\Models\Accounts\Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        if (isset($this->display_name))
+        {
+            return $this->display_name;
+        }
+        elseif (isset($this->getAccount()->given_name))
+        {
+            return $this->getAccount()->given_name;
+        }
+        else
+        {
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getHomeLocationString()
+    {
+        if ($location = $this->getAccount()->getPrimaryLocation())
+        {
+            return $location->city . ', ' . $location->state;
+        }
+        return '';
+    }
+
 }

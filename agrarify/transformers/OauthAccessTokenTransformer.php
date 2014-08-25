@@ -15,16 +15,16 @@ class OauthAccessTokenTransformer extends AgrarifyTransformer
     /**
      * Transforms a single model record.
      *
-     * @param array $account
+     * @param \Agrarify\Models\Oauth2\OauthAccessToken $token
      * @return array
      */
-    public function transform($account)
+    public function transform($token)
     {
         return [
-            //'id'                => (int) $this->getArrayValueOrDefault($access_token, 'id', -1),
-            //'account_id'        => (int) $this->getArrayValueOrDefault($access_token, 'account_id', -1),
-            //'oauth_consumer_id' => (int) $this->getArrayValueOrDefault($access_token, 'oauth_consumer_id', -1),
-            'token'             => $this->getArrayValueOrDefault($account, 'token'),
+            //'id'                => (int) $this->getValueOrDefault($access_token, 'id', -1),
+            //'account_id'        => (int) $this->getValueOrDefault($access_token, 'account_id', -1),
+            //'oauth_consumer_id' => (int) $this->getValueOrDefault($access_token, 'oauth_consumer_id', -1),
+            'token'             => $this->getValueOrDefault($token, 'token'),
             'token_type'        => 'Bearer',
         ];
     }

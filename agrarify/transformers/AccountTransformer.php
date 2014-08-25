@@ -15,16 +15,16 @@ class AccountTransformer extends AgrarifyTransformer
     /**
      * Transforms a single model record.
      *
-     * @param array $account
+     * @param \Agrarify\Models\Accounts\Account $account
      * @return array
      */
     public function transform($account)
     {
         return [
-            'given_name'        => $this->getArrayValueOrDefault($account, 'given_name'),
-            'surname'           => $this->getArrayValueOrDefault($account, 'surname'),
-            'email_address'     => $this->getArrayValueOrDefault($account, 'email_address'),
-            'verification_code' => $this->getArrayValueOrDefault($account, 'verification_code'),
+            'given_name'        => $this->getValueOrDefault($account, 'given_name'),
+            'surname'           => $this->getValueOrDefault($account, 'surname'),
+            'email_address'     => $this->getValueOrDefault($account, 'email_address'),
+            'verification_code' => $this->getValueOrDefault($account, 'verification_code'),
         ];
     }
 

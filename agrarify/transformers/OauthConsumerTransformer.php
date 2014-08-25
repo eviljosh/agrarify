@@ -15,18 +15,18 @@ class OauthConsumerTransformer extends AgrarifyTransformer
     /**
      * Transforms a single model record.
      *
-     * @param array $account
+     * @param \Agrarify\Models\Oauth2\OauthConsumer $consumer
      * @return array
      */
-    public function transform($account)
+    public function transform($consumer)
     {
         return [
-            'id'              => (int) $this->getArrayValueOrDefault($account, 'id', -1),
-            'name'            => $this->getArrayValueOrDefault($account, 'name'),
-            'description'     => $this->getArrayValueOrDefault($account, 'description'),
-            'type'            => $this->getArrayValueOrDefault($account, 'type'),
-            'consumer_id'     => $this->getArrayValueOrDefault($account, 'consumer_id'),
-            'consumer_secret' => $this->getArrayValueOrDefault($account, 'consumer_secret'),
+            'id'              => (int) $this->getValueOrDefault($consumer, 'id', -1),
+            'name'            => $this->getValueOrDefault($consumer, 'name'),
+            'description'     => $this->getValueOrDefault($consumer, 'description'),
+            'type'            => $this->getValueOrDefault($consumer, 'type'),
+            'consumer_id'     => $this->getValueOrDefault($consumer, 'consumer_id'),
+            'consumer_secret' => $this->getValueOrDefault($consumer, 'consumer_secret'),
         ];
     }
 

@@ -79,6 +79,14 @@ class Account extends BaseModel {
     }
 
     /**
+     * @return \Agrarify\Models\Subresources\Location
+     */
+    public function getPrimaryLocation()
+    {
+        return null; // TODO: implement
+    }
+
+    /**
      * @param $email_address
      * @return Account
      */
