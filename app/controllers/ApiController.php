@@ -36,23 +36,24 @@ class ApiController extends BaseController {
 
     /**
      * @param mixed $payload The Model object or Collection to send
+     * @param array $transform_options Optional options to pass to the transformer
      * @param int $http_status
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function sendSuccessResponse($payload, $http_status = HttpResponse::HTTP_OK)
+    protected function sendSuccessResponse($payload, $transform_options = [], $http_status = HttpResponse::HTTP_OK)
     {
         $json_payload = '';
 
         if ($payload instanceof \Illuminate\Database\Eloquent\Model)
         {
             $json_payload = [
-                $this->transformer->getSingularName() => $this->transformer->transform($payload)
+                $this->transformer->getSingularName() => $this->transformer->transform($payload, $transform_options)
             ];
         }
         else
         {
             $json_payload = [
-                $this->transformer->getPluralName() => $this->transformer->transformCollection($payload->toArray())
+                $this->transformer->getPluralName() => $this->transformer->transformCollection($payload)
             ];
         }
 

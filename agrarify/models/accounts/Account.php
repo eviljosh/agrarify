@@ -42,6 +42,62 @@ class Account extends BaseModel {
     ];
 
     /**
+     * @return mixed The database id for the record
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string Created at date
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @return string Email address
+     */
+    public function getEmailAddress()
+    {
+        return $this->email_address;
+    }
+
+    /**
+     * @param string $email_address
+     */
+    public function setEmailAddress($email_address)
+    {
+        $this->email_address = $email_address;
+    }
+
+    /**
+     * @return string Given name
+     */
+    public function getGivenName()
+    {
+        return $this->given_name;
+    }
+
+    /**
+     * @param string $code The create type code
+     */
+    public function setCreateCode($code)
+    {
+        $this->create_code = $code;
+    }
+
+    /**
+     * @return \Agrarify\Models\Accounts\AccountProfile
+     */
+    public function getProfile()
+    {
+        return $this->accountProfile;
+    }
+
+    /**
      * Defines the one-to-many relationship with oauth access tokens
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -56,7 +112,7 @@ class Account extends BaseModel {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function account_profile()
+    public function accountProfile()
     {
         return $this->hasOne('Agrarify\Models\Accounts\AccountProfile');
     }
@@ -76,6 +132,14 @@ class Account extends BaseModel {
     public function hashAndSetPassword($password_text)
     {
         $this->password = Hash::make($password_text, ['rounds' => 13]);
+    }
+
+    /**
+     * @return string Date account was created
+     */
+    public function getMemberSince()
+    {
+        return date('Y-m-d', $this->getCreatedAt()->getTimeStamp());
     }
 
     /**

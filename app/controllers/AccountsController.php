@@ -49,7 +49,7 @@ class AccountsController extends ApiController {
 
         // We validate emails as unique, so we need to do a little dance to avoid trying to revalidate the existing one.
         $should_validate_email = true;
-        if (!isset($payload['email_address']) or strtolower($payload['email_address']) == strtolower($account->email_address))
+        if (!isset($payload['email_address']) or strtolower($payload['email_address']) == strtolower($account->getEmailAddress()))
         {
             $should_validate_email = false;
         }
@@ -70,10 +70,10 @@ class AccountsController extends ApiController {
         }
         else
         {
-            $current_email = $account->email_address;
-            $account->email_address = null;
+            $current_email = $account->getEmailAddress();
+            $account->setEmailAddress(null);
             $this->assertValid($account);
-            $account->email_address = $current_email;
+            $account->setEmailAddress($current_email);
         }
 
         // Save and return the updated account.

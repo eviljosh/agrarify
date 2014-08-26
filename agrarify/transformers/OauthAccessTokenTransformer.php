@@ -16,9 +16,10 @@ class OauthAccessTokenTransformer extends AgrarifyTransformer
      * Transforms a single model record.
      *
      * @param \Agrarify\Models\Oauth2\OauthAccessToken $token
+     * @param array $options
      * @return array
      */
-    public function transform($token)
+    public function transform($token, $options = [])
     {
         return [
             //'id'                => (int) $this->getValueOrDefault($access_token, 'id', -1),

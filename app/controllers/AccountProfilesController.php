@@ -1,7 +1,7 @@
 <?php
 
-use Agrarify\Models\Accounts\Account;
-use Agrarify\Transformers\AccountTransformer;
+use Agrarify\Models\Accounts\AccountProfile;
+use Agrarify\Transformers\AccountProfileTransformer;
 use Illuminate\Support\Facades\Response;
 
 class AccountProfilesController extends ApiController {
@@ -11,91 +11,72 @@ class AccountProfilesController extends ApiController {
      */
     public function __construct()
     {
-        $this->transformer = new AccountTransformer();
+        $this->transformer = new AccountProfileTransformer();
     }
 
 	/**
-	 * HTTP GET
-     * Display the specified account.
+     * Display the profile for the authenticated account.
 	 *
-	 * @param  int  $id
 	 * @return Response
 	 */
-	public function showForAccount($id)
+	public function showForAccount()
 	{
-        if ($id != 'me')
-        {
-            return $this->sendErrorNotFoundResponse();
-        }
-        return $this->sendSuccessResponse($this->getAccount());
+        return $this->sendSuccessResponse($this->getAccount()->getProfile(), ['resource_owner' => true]);
 	}
 
 	/**
-	 * HTTP PUT
-     * Update the specified account in storage.
+     * Update the profile for the authenticated account.
 	 *
-	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
-	{
-        if ($id != 'me')
-        {
-            return $this->sendErrorNotFoundResponse();
-        }
+	public function updateForAccount()
+    {
 
         $payload = $this->assertRequestPayloadItem();
-        $account = $this->getAccount();
+        $profile = $this->getAccount()->getProfile();
 
-        // We validate emails as unique, so we need to do a little dance to avoid trying to revalidate the existing one.
-        $should_validate_email = true;
-        if (!isset($payload['email_address']) or strtolower($payload['email_address']) == strtolower($account->email_address))
+        // We validate slugs as unique, so we need to do a little dance to avoid trying to revalidate the existing one.
+        $should_validate_slug = true;
+        if (!isset($payload['profile_slug']) or strtolower($payload['profile_slug']) == strtolower($profile->getSlug()))
         {
-            $should_validate_email = false;
+            $should_validate_slug = false;
         }
 
-        // Update the account instance.
-        $account->fill($payload);
+        // Update the profile instance.
+        $profile->fill($payload);
 
-        // Handle password updates separately since they must be hashed.
-        if (isset($payload['password']) and strlen($payload['password']) > 0)
+        // Validate the profile instance
+        if ($should_validate_slug)
         {
-            $account->hashAndSetPassword($payload['password']);
-        }
-
-        // Validate the account instance
-        if ($should_validate_email)
-        {
-            $this->assertValid($account);
+            $this->assertValid($profile);
         }
         else
         {
-            $current_email = $account->email_address;
-            $account->email_address = null;
-            $this->assertValid($account);
-            $account->email_address = $current_email;
+            $current_slug = $profile->getSlug();
+            $profile->setSlug(null);
+            $this->assertValid($profile);
+            $profile->setSlug($current_slug);
         }
 
-        // Save and return the updated account.
-        $account->save();
-        return $this->sendSuccessResponse($account);
+        // Save and return the updated profile.
+        $profile->save();
+        return $this->sendSuccessResponse($profile, ['resource_owner' => true]);
 	}
 
-	/**
-     * HTTP DELETE
-	 * Remove the specified accounts from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-        if ($id != 'me')
+    /**
+     * Display the public profile for the slug.
+     *
+     * @param string $slug
+     * @return Response
+     */
+    public function show($slug)
+    {
+        $profile = AccountProfile::fetchBySlug($slug);
+        if ($profile)
         {
-            return $this->sendErrorNotFoundResponse();
+            return $this->sendSuccessResponse($profile);
         }
-		// TODO: implement, once we know what will need to be done upon account deletion
-        return $this->sendErrorNotImplementedResponse();
-	}
+        return $this->sendErrorNotFoundResponse();
+    }
 
 }

@@ -22,13 +22,16 @@ Route::get('/josh', function()
 });
 
 // Oauth 2 endpoints
-Route::post('/v1/oauth_consumer', ['as' => 'v1.oauthconsumer.create', 'uses' => 'OauthController@createConsumer']);
-Route::post('/v1/access_token', ['as' => 'v1.accesstoken.create', 'uses' => 'OauthController@createAccessToken']);
+Route::post('/v1/oauth_consumer', ['as' => 'v1.oauthconsumers.create', 'uses' => 'OauthController@createConsumer']);
+Route::post('/v1/access_token', ['as' => 'v1.accesstokens.create', 'uses' => 'OauthController@createAccessToken']);
 
 // API v1 Resource endpoints
 Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
 
     Route::resource('accounts', 'AccountsController');
 
+    Route::get('/accounts/me/profile', ['as' => 'v1.accountprofiles.showforaccount', 'uses' => 'AccountProfilesController@showForAccount']);
+    Route::put('/accounts/me/profile', ['as' => 'v1.accountprofiles.updateforaccount', 'uses' => 'AccountProfilesController@updateForAccount']);
+    Route::get('/profiles/{slug}', ['as' => 'v1.accountprofiles.show', 'uses' => 'AccountProfilesController@show']);
 
 });

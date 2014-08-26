@@ -1,5 +1,6 @@
 <?php
 use Agrarify\Models\Accounts\Account;
+use Agrarify\Models\Accounts\AccountProfile;
 use Agrarify\Models\Oauth2\OauthAccessToken;
 use Agrarify\Models\Oauth2\OauthConsumer;
 use Agrarify\Transformers\AgrarifyTransformer;
@@ -92,8 +93,13 @@ class OauthController extends ApiController {
         if ($grant_type == 'new')
         {
             $account = new Account();
-            $account->create_code = Account::CREATE_CODE_MOBILE_APP;
+            $account->setCreateCode(Account::CREATE_CODE_MOBILE_APP);
             $account->save();
+
+            $profile = new AccountProfile();
+            $profile->setAccount($account);
+            $profile->save();
+
         }
         elseif ($grant_type == 'password')
         {

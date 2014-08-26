@@ -37,6 +37,7 @@ class AccountProfile extends BaseModel {
         'profile_slug',
         'display_name',
         'favorite_veggie',
+        'bio',
         'is_interested_in_getting_veggies',
         'is_interested_in_giving_veggies',
         'is_interested_in_gardening',
@@ -76,6 +77,30 @@ class AccountProfile extends BaseModel {
     }
 
     /**
+     * @param \Agrarify\Models\Accounts\Account $account
+     */
+    public function setAccount($account)
+    {
+        $this->account_id = $account->getId();
+    }
+
+    /**
+     * @return string The profile url slug
+     */
+    public function getSlug()
+    {
+        return $this->profile_slug;
+    }
+
+    /**
+     * @param string $slug The new profile url slug
+     */
+    public function setSlug($slug)
+    {
+        $this->profile_slug = $slug;
+    }
+
+    /**
      * @return string
      */
     public function getDisplayName()
@@ -84,9 +109,9 @@ class AccountProfile extends BaseModel {
         {
             return $this->display_name;
         }
-        elseif (isset($this->getAccount()->given_name))
+        elseif ($this->getAccount()->getGivenName())
         {
-            return $this->getAccount()->given_name;
+            return $this->getAccount()->getGivenName();
         }
         else
         {
@@ -101,9 +126,18 @@ class AccountProfile extends BaseModel {
     {
         if ($location = $this->getAccount()->getPrimaryLocation())
         {
-            return $location->city . ', ' . $location->state;
+            return $location->getCity() . ', ' . $location->getState();
         }
         return '';
+    }
+
+    /**
+     * @param $slug
+     * @return AccountProfile
+     */
+    public static function fetchBySlug($slug)
+    {
+        return self::firstByAttributes(['profile_slug' => $slug]);
     }
 
 }

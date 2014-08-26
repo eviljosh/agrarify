@@ -16,9 +16,10 @@ class OauthConsumerTransformer extends AgrarifyTransformer
      * Transforms a single model record.
      *
      * @param \Agrarify\Models\Oauth2\OauthConsumer $consumer
+     * @param array $options
      * @return array
      */
-    public function transform($consumer)
+    public function transform($consumer, $options = [])
     {
         return [
             'id'              => (int) $this->getValueOrDefault($consumer, 'id', -1),

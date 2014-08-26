@@ -44,4 +44,20 @@ class Location extends BaseModel {
         'longitude',
     ];
 
+    /**
+     * @return string City
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @return string State
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
 }

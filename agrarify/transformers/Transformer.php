@@ -40,9 +40,10 @@ abstract class AgrarifyTransformer
      * Transforms a single model record.
      *
      * @param \Agrarify\Models\BaseModel $item
+     * @param array $options
      * @return array
      */
-    public abstract function transform($item);
+    public abstract function transform($item, $options = []);
 
     /**
      * Transforms input intended to create or modify a model record.
