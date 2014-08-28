@@ -28,11 +28,15 @@ abstract class AgrarifyTransformer
     /**
      * Transforms a collection of model records.
      *
-     * @param array $items
+     * @param array|\Traversable $items
      * @return array
      */
     public function transformCollection($items)
     {
+        if (!is_array($items))
+        {
+            $items = iterator_to_array($items);
+        }
         return array_map([$this, 'transform'], $items);
     }
 

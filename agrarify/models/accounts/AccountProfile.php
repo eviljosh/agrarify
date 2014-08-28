@@ -89,7 +89,7 @@ class AccountProfile extends BaseModel {
      */
     public function getSlug()
     {
-        return $this->profile_slug;
+        return $this->getParamOrDefault('profile_slug');
     }
 
     /**

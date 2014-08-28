@@ -3,6 +3,8 @@
 namespace Agrarify\Models\Subresources;
 
 use Agrarify\Models\BaseModel;
+use League\Geotools\Geotools;
+use League\Geotools\Coordinate\Coordinate;
 
 class Location extends BaseModel {
 
@@ -27,6 +29,7 @@ class Location extends BaseModel {
         'latitude'    => 'max:12',
         'longitude'   => 'max:12',
         'geohash'     => 'max:12',
+        'is_primary'  => 'boolean',
     ];
 
     /**
@@ -42,14 +45,31 @@ class Location extends BaseModel {
         'postal_code',
         'latitude',
         'longitude',
+        'is_primary',
     ];
+
+    /**
+     * @return int Id
+     */
+    public function getId()
+    {
+        return $this->getParamOrDefault('id');
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\Account $account
+     */
+    public function setAccount($account)
+    {
+        $this->account_id = $account->getId();
+    }
 
     /**
      * @return string City
      */
     public function getCity()
     {
-        return $this->city;
+        return $this->getParamOrDefault('city');
     }
 
     /**
@@ -57,7 +77,46 @@ class Location extends BaseModel {
      */
     public function getState()
     {
-        return $this->state;
+        return $this->getParamOrDefault('state');
+    }
+
+    /**
+     * @return string Longitude
+     */
+    public function getLongitude()
+    {
+        return $this->getParamOrDefault('longitude');
+    }
+
+    /**
+     * @return string Latitude
+     */
+    public function getLatitude()
+    {
+        return $this->getParamOrDefault('latitude');
+    }
+
+    /**
+     * @return boolean Indication of whether this is the primary location
+     */
+    public function isPrimary()
+    {
+        return (boolean) $this->getParamOrDefault('is_primary');
+    }
+
+    /**
+     * Sets geohash if longitude and latitude are present
+     */
+    public function calculateGeohash()
+    {
+        if ($this->getLatitude() and $this->getLongitude())
+        {
+            $coord = new Coordinate($this->getLatitude() . ', ' . $this->getLongitude());
+            $geotool = new Geotools();
+            $encoded = $geotool->geohash()->encode($coord);
+            $hash = $encoded->getGeohash();
+            $this->geohash = $hash;
+        }
     }
 
 }

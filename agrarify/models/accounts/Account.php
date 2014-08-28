@@ -46,7 +46,7 @@ class Account extends BaseModel {
      */
     public function getId()
     {
-        return $this->id;
+        return $this->getParamOrDefault('id');
     }
 
     /**
@@ -54,7 +54,7 @@ class Account extends BaseModel {
      */
     public function getCreatedAt()
     {
-        return $this->created_at;
+        return $this->getParamOrDefault('created_at');
     }
 
     /**
@@ -62,7 +62,7 @@ class Account extends BaseModel {
      */
     public function getEmailAddress()
     {
-        return $this->email_address;
+        return $this->getParamOrDefault('email_address');
     }
 
     /**
@@ -78,7 +78,7 @@ class Account extends BaseModel {
      */
     public function getGivenName()
     {
-        return $this->given_name;
+        return $this->getParamOrDefault('given_name');
     }
 
     /**
@@ -98,13 +98,40 @@ class Account extends BaseModel {
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * @param int $id Id of the location
+     * @return \Agrarify\Models\Subresources\Location
+     */
+    public function getLocationById($id)
+    {
+        return $this->locations()->where('id', '=', $id)->first();
+    }
+
+    /**
      * Defines the one-to-many relationship with oauth access tokens
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function oauth_access_tokens()
+    public function oauthAccessTokens()
     {
         return $this->hasMany('Agrarify\Models\Oauth2\OauthAccessToken');
+    }
+
+    /**
+     * Defines the one-to-many relationship with locations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locations()
+    {
+        return $this->hasMany('Agrarify\Models\Subresources\Location');
     }
 
     /**
@@ -143,11 +170,21 @@ class Account extends BaseModel {
     }
 
     /**
+     * Returns primary location or, if none exists, some location associated with the account.
+     *
      * @return \Agrarify\Models\Subresources\Location
      */
     public function getPrimaryLocation()
     {
-        return null; // TODO: implement
+        $primary_location = null;
+        foreach ($this->locations as $location) {
+            $primary_location = $location;
+            if ($location->isPrimary())
+            {
+                break;
+            }
+        }
+        return $primary_location;
     }
 
     /**

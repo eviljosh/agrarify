@@ -66,4 +66,20 @@ class BaseModel extends Model
             throw new ValidationException($this->getValidationErrors());
         }
     }
+
+    /**
+     * Helper method to get object parameter or return a default value if that parameter isn't present.
+     *
+     * @param string $param_name
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function getParamOrDefault($param_name, $default = null)
+    {
+        if (isset($this->$param_name))
+        {
+            return $this->$param_name;
+        }
+        return $default;
+    }
 }

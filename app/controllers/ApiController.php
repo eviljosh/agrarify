@@ -61,10 +61,18 @@ class ApiController extends BaseController {
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendSuccessNoContentResponse()
+    {
+        return $this->sendSuccessResponse([], [], HttpResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
      * @param int $http_status HTTP status code
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendErrorResponse($errors = [], $http_status = HttpResponse::HTTP_BAD_REQUEST)
     {
@@ -93,7 +101,7 @@ class ApiController extends BaseController {
 
     /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendErrorForbiddenResponse($errors = [])
     {
@@ -102,7 +110,7 @@ class ApiController extends BaseController {
 
     /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendErrorUnauthorizedResponse($errors = [])
     {
@@ -111,7 +119,7 @@ class ApiController extends BaseController {
 
     /**
      * @param array $errors Array of errors, where each error is of form ['message' => '', 'code' => 111]
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendErrorBadRequestResponse($errors = [])
     {
@@ -119,13 +127,16 @@ class ApiController extends BaseController {
     }
 
     /**
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendErrorNotImplementedResponse()
     {
         return $this->sendErrorResponse(['message' => 'Not yet implemented.'], HttpResponse::HTTP_NOT_IMPLEMENTED);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function sendErrorNotFoundResponse()
     {
         return $this->sendErrorResponse(['message' => 'Specified resource not found.'], HttpResponse::HTTP_NOT_FOUND);
