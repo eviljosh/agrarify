@@ -94,7 +94,7 @@ class Account extends BaseModel {
      */
     public function getProfile()
     {
-        return $this->accountProfile;
+        return $this->profile;
     }
 
     /**
@@ -139,7 +139,7 @@ class Account extends BaseModel {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function accountProfile()
+    public function profile()
     {
         return $this->hasOne('Agrarify\Models\Accounts\AccountProfile');
     }

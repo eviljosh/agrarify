@@ -98,7 +98,8 @@ class OauthAccessToken extends BaseModel {
      */
     public static function fetchByToken($token_string)
     {
-        return self::firstByAttributes(['token' => $token_string]);
+        // we expect most calls will want the account and account profile, we we eager load them
+        return self::with('account.profile')->where(['token' => $token_string])->first();
     }
 
 }
