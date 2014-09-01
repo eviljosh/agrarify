@@ -4,6 +4,8 @@ namespace Agrarify\Transformers;
 
 class VeggieTransformer extends AgrarifyTransformer
 {
+    const OPTIONS_SHOULD_SEE_DETAILS = 'full_details';
+
     /**
      * Constructor
      */
@@ -26,13 +28,16 @@ class VeggieTransformer extends AgrarifyTransformer
     public function transform($veggie, $options = [])
     {
         $location_array = [];
-        if (isset($options['full_location']) and $options['full_location'])
+        if ($this->getOption($options, self::OPTIONS_SHOULD_SEE_DETAILS))
         {
             $location_array = $this->location_transformer->transform($veggie->getLocation());
         }
         else
         {
-            $location_array = $this->location_transformer->transform($veggie->getLocation(), ['rough_only' => true]);
+            $location_array = $this->location_transformer->transform(
+                $veggie->getLocation(),
+                [LocationTransformer::OPTIONS_ROUGH_ONLY => true]
+            );
         }
 
         $availability = $veggie->getAvailability();

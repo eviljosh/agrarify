@@ -51,10 +51,24 @@ class Location extends BaseModel {
     ];
 
     /**
+     * Set geohash before saving.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = array())
+    {
+        // TODO: use eloquent's ->getDirty() and ->getOriginal to only calculate if necessary.  See http://stackoverflow.com/questions/21266030/laravel4-track-changes-to-be-saved-by-eloquent
+        $this->calculateGeohash();   // TODO: ASYNC -- make this an async task!
+        return parent::save($options);
+    }
+
+    /**
      * @return int Id
      */
     public function getId()
     {
+        $this->save();
         return $this->getParamOrDefault('id');
     }
 

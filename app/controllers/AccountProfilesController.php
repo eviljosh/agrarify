@@ -21,7 +21,10 @@ class AccountProfilesController extends ApiController {
 	 */
 	public function showForAccount()
 	{
-        return $this->sendSuccessResponse($this->getAccount()->getProfile(), ['resource_owner' => true]);
+        return $this->sendSuccessResponse(
+            $this->getAccount()->getProfile(),
+            [AccountProfileTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+        );
 	}
 
 	/**
@@ -60,7 +63,10 @@ class AccountProfilesController extends ApiController {
 
         // Save and return the updated profile.
         $profile->save();
-        return $this->sendSuccessResponse($profile, ['resource_owner' => true]);
+        return $this->sendSuccessResponse(
+            $profile,
+            [AccountProfileTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+        );
 	}
 
     /**

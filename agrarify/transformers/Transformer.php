@@ -83,4 +83,20 @@ abstract class AgrarifyTransformer
     {
         return $this->plural_name;
     }
+
+    /**
+     * Returns the value of the option parameter if it is found within the options array.
+     *
+     * @param array $options
+     * @param string $option_name
+     * @return mixed
+     */
+    protected function getOption($options, $option_name)
+    {
+        if (isset($options[$option_name]))
+        {
+            return $options[$option_name];
+        }
+        return null;
+    }
 }

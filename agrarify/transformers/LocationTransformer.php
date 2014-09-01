@@ -4,6 +4,9 @@ namespace Agrarify\Transformers;
 
 class LocationTransformer extends AgrarifyTransformer
 {
+    const OPTIONS_IS_RESOURCE_OWNER = 'resource_owner';
+    const OPTIONS_ROUGH_ONLY = 'rough_only';
+
     /**
      * Constructor
      */
@@ -26,7 +29,7 @@ class LocationTransformer extends AgrarifyTransformer
             'state'       => $location->getState(),
         ];
 
-        if (!isset($options['rough_only']) or !$options['rough_only'])
+        if (!$this->getOption($options, self::OPTIONS_ROUGH_ONLY))
         {
             $json_array = array_merge($json_array, [
                 'number'      => $location->getNumber(),
@@ -37,7 +40,7 @@ class LocationTransformer extends AgrarifyTransformer
             ]);
         }
 
-        if (isset($options['resource_owner']) and $options['resource_owner'])
+        if ($this->getOption($options, self::OPTIONS_IS_RESOURCE_OWNER))
         {
             $json_array = array_merge($json_array, [
                 'id'          => $location->getId(),

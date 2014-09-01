@@ -21,7 +21,10 @@ class LocationsController extends ApiController {
 	 */
 	public function listLocations()
 	{
-        return $this->sendSuccessResponse($this->getAccount()->getLocations(), ['resource_owner' => true]);
+        return $this->sendSuccessResponse(
+            $this->getAccount()->getLocations(),
+            [LocationTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+        );
 	}
 
     /**
@@ -35,7 +38,10 @@ class LocationsController extends ApiController {
         $location = $this->getAccount()->getLocationById($id);
         if ($location)
         {
-            return $this->sendSuccessResponse($location, ['resource_owner' => true]);
+            return $this->sendSuccessResponse(
+                $location,
+                [LocationTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+            );
         }
         return $this->sendErrorNotFoundResponse();
     }
@@ -50,10 +56,12 @@ class LocationsController extends ApiController {
         $payload = $this->assertRequestPayloadItem();
         $location = new Location($payload);
         $location->setAccount($this->getAccount());
-        $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
         $this->assertValid($location);
         $location->save();
-        return $this->sendSuccessResponseCreated($location, ['resource_owner' => true]);
+        return $this->sendSuccessResponseCreated(
+            $location,
+            [LocationTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+        );
     }
 
     /**
@@ -70,9 +78,11 @@ class LocationsController extends ApiController {
         if ($location)
         {
             $location->fill($payload);
-            $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
             $this->assertValid($location);
-            return $this->sendSuccessResponse($location, ['resource_owner' => true]);
+            return $this->sendSuccessResponse(
+                $location,
+                [LocationTransformer::OPTIONS_IS_RESOURCE_OWNER => true]
+            );
         }
         return $this->sendErrorNotFoundResponse();
     }

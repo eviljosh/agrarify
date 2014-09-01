@@ -3,6 +3,7 @@
 namespace Agrarify\Models\Accounts;
 
 use Agrarify\Models\BaseModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class Account extends BaseModel {
@@ -50,7 +51,7 @@ class Account extends BaseModel {
     }
 
     /**
-     * @return string Created at date
+     * @return Carbon Created at date
      */
     public function getCreatedAt()
     {
@@ -131,6 +132,15 @@ class Account extends BaseModel {
     }
 
     /**
+     * @param int $id Id of the veggie
+     * @return \Agrarify\Models\Veggies\Veggie
+     */
+    public function getVeggieById($id)
+    {
+        return $this->veggies()->where('id', '=', $id)->first();
+    }
+
+    /**
      * Defines the one-to-many relationship with oauth access tokens
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -148,6 +158,16 @@ class Account extends BaseModel {
     public function locations()
     {
         return $this->hasMany('Agrarify\Models\Subresources\Location');
+    }
+
+    /**
+     * Defines the one-to-many relationship with veggies
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function veggies()
+    {
+        return $this->hasMany('Agrarify\Models\Veggies\Veggie');
     }
 
     /**
@@ -182,7 +202,7 @@ class Account extends BaseModel {
      */
     public function getMemberSince()
     {
-        return date('Y-m-d', $this->getCreatedAt()->getTimeStamp());
+        return $this->getCreatedAt()->toFormattedDateString();
     }
 
     /**

@@ -74,6 +74,14 @@ class Availability extends BaseModel {
     }
 
     /**
+     * @return mixed The database id for the record
+     */
+    public function getId()
+    {
+        return $this->getParamOrDefault('id');
+    }
+
+    /**
      * @return bool
      */
     public function isAvailableMonday()

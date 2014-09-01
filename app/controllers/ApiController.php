@@ -29,7 +29,7 @@ class ApiController extends BaseController {
         }
 
         throw new ApiErrorException(
-            ['message' => 'Unable to find or parse request payload. Is your Content-Type set correctly?'],
+            ['message' => 'Unable to find or parse request payload. Is your Content-Type set correctly? Is your JSON properly formatted?'],
             HttpResponse::HTTP_BAD_REQUEST
         );
     }

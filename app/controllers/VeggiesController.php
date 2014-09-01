@@ -1,8 +1,9 @@
 <?php
 
-use Agrarify\Models\Accounts\Account;
+use Agrarify\Models\Subresources\Availability;
 use Agrarify\Models\Subresources\Location;
-use Agrarify\Transformers\LocationTransformer;
+use Agrarify\Models\Veggies\Veggie;
+use Agrarify\Transformers\VeggieTransformer;
 use Illuminate\Support\Facades\Response;
 
 class VeggiesController extends ApiController {
@@ -12,7 +13,7 @@ class VeggiesController extends ApiController {
      */
     public function __construct()
     {
-        //$this->transformer = new LocationTransformer();
+        $this->transformer = new VeggieTransformer();
     }
 
     /**
@@ -67,45 +68,106 @@ class VeggiesController extends ApiController {
 
 
     /**
-     * Display all locations associated with this account.
+     * Display all veggies created by this account in the recent past.
 	 *
 	 * @return Response
 	 */
-	public function listLocations()
+	public function index()
 	{
-        return $this->sendSuccessResponse($this->getAccount()->getLocations());
+        return $this->sendSuccessResponse(
+            Veggie::fetchByAccountForDaysPast($this->getAccount()),
+            [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true]
+        );
 	}
 
     /**
-     * Display a location by id.
+     * Display a veggie by id.
      *
      * @param $id
      * @return Response
      */
     public function show($id)
     {
-        $location = $this->getAccount()->getLocationById($id);
-        if ($location)
+        $veggie = Veggie::find($id);
+        if ($veggie)
         {
-            return $this->sendSuccessResponse($location);
+            $options = [];
+            if ($veggie->shouldAccountSeeDetails($this->getAccount()))
+            {
+                $options = [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true];
+            }
+
+            return $this->sendSuccessResponse($veggie, $options);
         }
         return $this->sendErrorNotFoundResponse();
     }
 
     /**
-     * Create a location associated with the authenticated account.
+     * Create a veggie associated with this account.
      *
      * @return Response
      */
-    public function create()
+    public function store()
     {
+        //dd(Request::instance());
         $payload = $this->assertRequestPayloadItem();
-        $location = new Location($payload);
-        $location->setAccount($this->getAccount());
-        $location->calculateGeohash();
-        $this->assertValid($location);
-        $location->save();
-        return $this->sendSuccessResponse($location);
+        $veggie = new Veggie($payload);
+        $veggie->setAccount($this->getAccount());
+
+        // Handle the location
+        if (isset($payload['location']))
+        {
+            $location_payload = $payload['location'];
+
+            if (isset($location_payload['id']))
+            {
+                if ($location = $this->getAccount()->getLocationById($location_payload['id']))
+                {
+                    $veggie->setLocation($location);
+                }
+                else
+                {
+                    return $this->sendErrorResponse(['message' => 'Location with given id does not exist']);
+                }
+            }
+            else
+            {
+                $location = new Location($location_payload);
+                $location->setAccount($this->getAccount());
+                $this->assertValid($location);
+                $location->save();
+                $veggie->setLocation($location);
+            }
+        }
+        else
+        {
+            return $this->sendErrorResponse(['message' => 'Location is required']);
+        }
+
+        // Handle availability
+        if (isset($payload['availability']))
+        {
+            $availability_payload = $payload['availability'];
+            $availability = new Availability($availability_payload);
+            $this->assertValid($availability);
+            $availability->save();
+            $veggie->setAvailability($availability);
+        }
+
+        // Set defaults
+        if (!$veggie->getStatus())
+        {
+            $veggie->setStatus(Veggie::STATUS_AVAILABLE);
+        }
+        if (!$veggie->getNotes())
+        {
+            $veggie->setNotes('Looking for a good home!');
+        }
+
+        // Validate and save
+        $this->assertValid($veggie);
+        $veggie->save();
+        return $this->sendSuccessResponseCreated($veggie);
     }
 
     /**

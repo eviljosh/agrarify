@@ -4,7 +4,9 @@ namespace Agrarify\Models\Veggies;
 
 use Agrarify\Models\BaseModel;
 use Agrarify\Models\Accounts\Account;
+use Agrarify\Models\Subresources\Availability;
 use Agrarify\Models\Subresources\Location;
+use Carbon\Carbon;
 
 class Veggie extends BaseModel {
 
@@ -90,15 +92,31 @@ class Veggie extends BaseModel {
     }
 
     /**
+     * @param \Agrarify\Models\Subresources\Location $location
+     */
+    public function setLocation($location)
+    {
+        $this->location_id = $location->getId();
+    }
+
+    /**
      * @return \Agrarify\Models\Subresources\Availability
      */
     public function getAvailability()
     {
         if (isset($this->availability_id))
         {
-            return Location::find($this->availability_id);
+            return Availability::find($this->availability_id);
         }
         return null;
+    }
+
+    /**
+     * @param \Agrarify\Models\Subresources\Availability $availability
+     */
+    public function setAvailability($availability)
+    {
+        $this->availability_id = $availability->getId();
     }
 
     /**
@@ -107,6 +125,14 @@ class Veggie extends BaseModel {
     public function getStatus()
     {
         return $this->getParamOrDefault('status');
+    }
+
+    /**
+     * @param int $status_code
+     */
+    public function setStatus($status_code)
+    {
+        $this->status = $status_code;
     }
 
     /**
@@ -139,6 +165,41 @@ class Veggie extends BaseModel {
     public function getNotes()
     {
         return $this->getParamOrDefault('notes');
+    }
+
+    /**
+     * @param string $notes
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+    }
+
+    /**
+     * Determines whether account should have access to veggie details.  E.g. account is owner or account has been
+     * granted pickup rights.
+     *
+     * @param \Agrarify\Models\Accounts\Account $account
+     * @return bool Indication of whether account should have access to veggie details
+     */
+    public function shouldAccountSeeDetails($account)
+    {
+        return true; //TODO implement
+    }
+
+    /**
+     * Fetches a collection of all Veggies for the given account created within the past x days.
+     *
+     * @param \Agrarify\Models\Accounts\Account $account
+     * @param int $days_past
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function fetchByAccountForDaysPast($account, $days_past = 30)
+    {
+        return self::where('account_id', '=', $account->getId())
+            ->where('created_at', '>=', Carbon::now()->subDays($days_past)->toDateString())
+            ->orderBy('created_at', 'DESC')
+            ->get();
     }
 
 }

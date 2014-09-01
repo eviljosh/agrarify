@@ -142,7 +142,10 @@ class AccountProfile extends BaseModel {
     {
         if ($location = $this->getAccount()->getPrimaryLocation())
         {
-            return $location->getCity() . ', ' . $location->getState();
+            if (!empty($location->getCity()) and !empty($location->getState()))
+            {
+                return $location->getCity() . ', ' . $location->getState();
+            }
         }
         return '';
     }

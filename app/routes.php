@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::delete('/accounts/me/locations/{id}', ['as' => 'v1.locations.delete', 'uses' => 'LocationsController@deleteLocation']);
 
     Route::get('/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@optionsList']);
+    Route::resource('veggies', 'VeggiesController');
 
 });
 

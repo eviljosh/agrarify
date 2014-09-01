@@ -4,6 +4,8 @@ namespace Agrarify\Transformers;
 
 class AccountProfileTransformer extends AgrarifyTransformer
 {
+    const OPTIONS_IS_RESOURCE_OWNER = 'resource_owner';
+
     /**
      * Constructor
      */
@@ -31,7 +33,7 @@ class AccountProfileTransformer extends AgrarifyTransformer
             'member_since'    => $profile->getAccount()->getMemberSince(),
         ];
 
-        if (isset($options['resource_owner']) and $options['resource_owner'])
+        if ($this->getOption($options, self::OPTIONS_IS_RESOURCE_OWNER))
         {
             $json_array = array_merge($json_array, [
                 'is_interested_in_getting_veggies'   => $profile->isInterestedInGettingVeggies(),
