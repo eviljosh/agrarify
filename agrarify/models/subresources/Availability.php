@@ -73,4 +73,100 @@ class Availability extends BaseModel {
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function isAvailableMonday()
+    {
+        return (boolean) $this->getParamOrDefault('monday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableTuesday()
+    {
+        return (boolean) $this->getParamOrDefault('tuesday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableWednesday()
+    {
+        return (boolean) $this->getParamOrDefault('wednesday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableThursday()
+    {
+        return (boolean) $this->getParamOrDefault('thursday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableFriday()
+    {
+        return (boolean) $this->getParamOrDefault('friday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableSaturday()
+    {
+        return (boolean) $this->getParamOrDefault('saturday', false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableSunday()
+    {
+        return (boolean) $this->getParamOrDefault('sunday', false);
+    }
+
+    /**
+     * @return int Type code
+     */
+    public function getType()
+    {
+        return $this->getParamOrDefault('type');
+    }
+
+    /**
+     * @return string Start date
+     */
+    public function getStartDate()
+    {
+        return $this->getParamOrDefault('start_date');
+    }
+
+    /**
+     * @return string End date
+     */
+    public function getEndDate()
+    {
+        return $this->getParamOrDefault('end_date');
+    }
+
+    /**
+     * @return int Start hour
+     */
+    public function getStartHour()
+    {
+        return $this->getParamOrDefault('start_hour');
+    }
+
+    /**
+     * @return int End hour
+     */
+    public function getEndHour()
+    {
+        return $this->getParamOrDefault('end_hour');
+    }
+
 }

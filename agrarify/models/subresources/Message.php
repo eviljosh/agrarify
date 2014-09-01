@@ -88,6 +88,4 @@ class Message extends BaseModel {
         $this->recipient_id = $account->getId();
     }
 
-
-
 }

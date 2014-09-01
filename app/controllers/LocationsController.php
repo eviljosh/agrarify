@@ -21,7 +21,7 @@ class LocationsController extends ApiController {
 	 */
 	public function listLocations()
 	{
-        return $this->sendSuccessResponse($this->getAccount()->getLocations());
+        return $this->sendSuccessResponse($this->getAccount()->getLocations(), ['resource_owner' => true]);
 	}
 
     /**
@@ -35,7 +35,7 @@ class LocationsController extends ApiController {
         $location = $this->getAccount()->getLocationById($id);
         if ($location)
         {
-            return $this->sendSuccessResponse($location);
+            return $this->sendSuccessResponse($location, ['resource_owner' => true]);
         }
         return $this->sendErrorNotFoundResponse();
     }
@@ -53,7 +53,7 @@ class LocationsController extends ApiController {
         $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
         $this->assertValid($location);
         $location->save();
-        return $this->sendSuccessResponseCreated($location);
+        return $this->sendSuccessResponseCreated($location, ['resource_owner' => true]);
     }
 
     /**
@@ -72,7 +72,7 @@ class LocationsController extends ApiController {
             $location->fill($payload);
             $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
             $this->assertValid($location);
-            return $this->sendSuccessResponse($location);
+            return $this->sendSuccessResponse($location, ['resource_owner' => true]);
         }
         return $this->sendErrorNotFoundResponse();
     }

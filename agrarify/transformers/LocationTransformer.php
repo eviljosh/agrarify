@@ -21,18 +21,32 @@ class LocationTransformer extends AgrarifyTransformer
      */
     public function transform($location, $options = [])
     {
-        return [
-            'id'          => $location->getId(),
-            'nickname'    => $location->getNickname(),
-            'number'      => $location->getNumber(),
-            'street'      => $location->getStreet(),
+        $json_array = [
             'city'        => $location->getCity(),
             'state'       => $location->getState(),
-            'postal_code' => $location->getPostalCode(),
-            'latitude'    => $location->getLatitude(),
-            'longitude'   => $location->getLongitude(),
-            'is_primary'  => $location->isPrimary(),
         ];
+
+        if (!isset($options['rough_only']) or !$options['rough_only'])
+        {
+            $json_array = array_merge($json_array, [
+                'number'      => $location->getNumber(),
+                'street'      => $location->getStreet(),
+                'postal_code' => $location->getPostalCode(),
+                'latitude'    => $location->getLatitude(),
+                'longitude'   => $location->getLongitude(),
+            ]);
+        }
+
+        if (isset($options['resource_owner']) and $options['resource_owner'])
+        {
+            $json_array = array_merge($json_array, [
+                'id'          => $location->getId(),
+                'nickname'    => $location->getNickname(),
+                'is_primary'  => $location->isPrimary(),
+            ]);
+        }
+
+        return $json_array;
     }
 
 }

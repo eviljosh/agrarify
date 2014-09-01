@@ -53,7 +53,7 @@ class ApiController extends BaseController {
         else
         {
             $json_payload = [
-                $this->transformer->getPluralName() => $this->transformer->transformCollection($payload)
+                $this->transformer->getPluralName() => $this->transformer->transformCollection($payload, $transform_options)
             ];
         }
 
