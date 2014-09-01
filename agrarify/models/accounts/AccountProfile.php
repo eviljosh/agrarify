@@ -103,6 +103,22 @@ class AccountProfile extends BaseModel {
     /**
      * @return string
      */
+    public function getBio()
+    {
+        return $this->getParamOrDefault('bio');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFavoriteVeggie()
+    {
+        return $this->getParamOrDefault('favorite_veggie');
+    }
+
+    /**
+     * @return string
+     */
     public function getDisplayName()
     {
         if (isset($this->display_name))
@@ -129,6 +145,38 @@ class AccountProfile extends BaseModel {
             return $location->getCity() . ', ' . $location->getState();
         }
         return '';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInterestedInGettingVeggies()
+    {
+        return (boolean) $this->getParamOrDefault('is_interested_in_getting_veggies');
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInterestedInGivingVeggies()
+    {
+        return (boolean) $this->getParamOrDefault('is_interested_in_giving_veggies');
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInterestedInGardening()
+    {
+        return (boolean) $this->getParamOrDefault('is_interested_in_gardening');
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInterestedInProvidingGardens()
+    {
+        return (boolean) $this->getParamOrDefault('is_interested_in_providing_gardens');
     }
 
     /**

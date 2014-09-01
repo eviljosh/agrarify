@@ -22,12 +22,12 @@ class OauthConsumerTransformer extends AgrarifyTransformer
     public function transform($consumer, $options = [])
     {
         return [
-            'id'              => (int) $this->getValueOrDefault($consumer, 'id', -1),
-            'name'            => $this->getValueOrDefault($consumer, 'name'),
-            'description'     => $this->getValueOrDefault($consumer, 'description'),
-            'type'            => $this->getValueOrDefault($consumer, 'type'),
-            'consumer_id'     => $this->getValueOrDefault($consumer, 'consumer_id'),
-            'consumer_secret' => $this->getValueOrDefault($consumer, 'consumer_secret'),
+            'id'              => $consumer->getId(),
+            'name'            => $consumer->getName(),
+            'description'     => $consumer->getDescription(),
+            'type'            => $consumer->getType(),
+            'consumer_id'     => $consumer->getConsumerId(),
+            'consumer_secret' => $consumer->getConsumerSecret(),
         ];
     }
 

@@ -82,11 +82,27 @@ class Account extends BaseModel {
     }
 
     /**
+     * @return string Surname
+     */
+    public function getSurname()
+    {
+        return $this->getParamOrDefault('surname');
+    }
+
+    /**
      * @param string $code The create type code
      */
     public function setCreateCode($code)
     {
         $this->create_code = $code;
+    }
+
+    /**
+     * @return string Verification code
+     */
+    public function getVerificationCode()
+    {
+        $this->getParamOrDefault('verification_code');
     }
 
     /**

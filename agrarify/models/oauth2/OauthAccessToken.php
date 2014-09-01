@@ -80,6 +80,14 @@ class OauthAccessToken extends BaseModel {
     }
 
     /**
+     * @return string Token string
+     */
+    public function getToken()
+    {
+        return $this->getParamOrDefault('token');
+    }
+
+    /**
      * @param Account $account
      * @param OauthConsumer $consumer
      * @return OauthAccessToken

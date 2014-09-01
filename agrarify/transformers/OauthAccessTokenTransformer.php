@@ -25,7 +25,7 @@ class OauthAccessTokenTransformer extends AgrarifyTransformer
             //'id'                => (int) $this->getValueOrDefault($access_token, 'id', -1),
             //'account_id'        => (int) $this->getValueOrDefault($access_token, 'account_id', -1),
             //'oauth_consumer_id' => (int) $this->getValueOrDefault($access_token, 'oauth_consumer_id', -1),
-            'token'             => $this->getValueOrDefault($token, 'token'),
+            'token'             => $token->getToken(),
             'token_type'        => 'Bearer',
         ];
     }

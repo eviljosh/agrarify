@@ -80,21 +80,4 @@ abstract class AgrarifyTransformer
     {
         return $this->plural_name;
     }
-
-    /**
-     * Helper method to get an object parameter, or return a default value if that parameter isn't present.
-     *
-     * @param \Agrarify\Models\BaseModel $item
-     * @param string $param
-     * @param mixed $default
-     * @return mixed
-     */
-    protected function getValueOrDefault($item, $param, $default = '')
-    {
-        if (isset($item->$param))
-        {
-            return $item->$param;
-        }
-        return $default;
-    }
 }

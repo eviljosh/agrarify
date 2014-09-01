@@ -1,6 +1,5 @@
 <?php
 
-use Agrarify\Models\Accounts\Account;
 use Agrarify\Models\Subresources\Location;
 use Agrarify\Transformers\LocationTransformer;
 use Illuminate\Support\Facades\Response;
@@ -51,10 +50,10 @@ class LocationsController extends ApiController {
         $payload = $this->assertRequestPayloadItem();
         $location = new Location($payload);
         $location->setAccount($this->getAccount());
-        $location->calculateGeohash();
+        $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
         $this->assertValid($location);
         $location->save();
-        return $this->sendSuccessResponse($location);
+        return $this->sendSuccessResponseCreated($location);
     }
 
     /**
@@ -71,7 +70,7 @@ class LocationsController extends ApiController {
         if ($location)
         {
             $location->fill($payload);
-            $location->calculateGeohash();
+            $location->calculateGeohash(); // TODO: ASYNC -- make this an async task!
             $this->assertValid($location);
             return $this->sendSuccessResponse($location);
         }

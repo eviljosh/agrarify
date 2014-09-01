@@ -22,11 +22,11 @@ class AccountProfileTransformer extends AgrarifyTransformer
     public function transform($profile, $options = [])
     {
         $json_array = [
-            'profile_slug'    => $this->getValueOrDefault($profile, 'profile_slug'),
+            'profile_slug'    => $profile->getSlug(),
             'display_name'    => $profile->getDisplayName(),
             'image_url'       => 'not yet implemented',
-            'bio'             => $this->getValueOrDefault($profile, 'bio'),
-            'favorite_veggie' => $this->getValueOrDefault($profile, 'favorite_veggie'),
+            'bio'             => $profile->getBio(),
+            'favorite_veggie' => $profile->getFavoriteVeggie(),
             'home_location'   => $profile->getHomeLocationString(),
             'member_since'    => $profile->getAccount()->getMemberSince(),
         ];
@@ -34,10 +34,10 @@ class AccountProfileTransformer extends AgrarifyTransformer
         if (isset($options['resource_owner']) and $options['resource_owner'])
         {
             $json_array = array_merge($json_array, [
-                'is_interested_in_getting_veggies'   => (boolean) $profile->is_interested_in_getting_veggies,
-                'is_interested_in_giving_veggies'    => (boolean) $profile->is_interested_in_giving_veggies,
-                'is_interested_in_gardening'         => (boolean) $profile->is_interested_in_gardening,
-                'is_interested_in_providing_gardens' => (boolean) $profile->is_interested_in_providing_gardens,
+                'is_interested_in_getting_veggies'   => $profile->isInterestedInGettingVeggies(),
+                'is_interested_in_giving_veggies'    => $profile->isInterestedInGivingVeggies(),
+                'is_interested_in_gardening'         => $profile->isInterestedInGardening(),
+                'is_interested_in_providing_gardens' => $profile->isInterestedInProvidingGardens(),
             ]);
         }
 

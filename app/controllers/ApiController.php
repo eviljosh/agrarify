@@ -61,6 +61,16 @@ class ApiController extends BaseController {
     }
 
     /**
+     * @param mixed $payload The Model object or Collection to send
+     * @param array $transform_options Optional options to pass to the transformer
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendSuccessResponseCreated($payload, $transform_options = [])
+    {
+        return $this->sendSuccessResponse($payload, $transform_options, HttpResponse::HTTP_CREATED);
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     protected function sendSuccessNoContentResponse()

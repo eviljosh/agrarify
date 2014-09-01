@@ -63,6 +63,54 @@ class OauthConsumer extends BaseModel {
     }
 
     /**
+     * @return mixed The database id for the record
+     */
+    public function getId()
+    {
+        return $this->getParamOrDefault('id', -1);
+    }
+
+    /**
+     * @return string Name
+     */
+    public function getName()
+    {
+        return $this->getParamOrDefault('name');
+    }
+
+    /**
+     * @return string Description
+     */
+    public function getDescription()
+    {
+        return $this->getParamOrDefault('description');
+    }
+
+    /**
+     * @return string Type
+     */
+    public function getType()
+    {
+        return $this->getParamOrDefault('type');
+    }
+
+    /**
+     * @return string Consumer id
+     */
+    public function getConsumerId()
+    {
+        return $this->getParamOrDefault('consumer_id');
+    }
+
+    /**
+     * @return string Consumer secret
+     */
+    public function getConsumerSecret()
+    {
+        return $this->getParamOrDefault('consumer_secret');
+    }
+
+    /**
      * @param string $consumer_id
      * @return OauthConsumer
      */

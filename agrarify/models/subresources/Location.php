@@ -67,6 +67,22 @@ class Location extends BaseModel {
     }
 
     /**
+     * @return string Nickname
+     */
+    public function getNickname()
+    {
+        return $this->getParamOrDefault('nickname');
+    }
+
+    /**
+     * @return string Number
+     */
+    public function getNumber()
+    {
+        return $this->getParamOrDefault('number');
+    }
+
+    /**
      * @return string City
      */
     public function getCity()
@@ -75,11 +91,27 @@ class Location extends BaseModel {
     }
 
     /**
+     * @return string Street
+     */
+    public function getStreet()
+    {
+        return $this->getParamOrDefault('street');
+    }
+
+    /**
      * @return string State
      */
     public function getState()
     {
         return $this->getParamOrDefault('state');
+    }
+
+    /**
+     * @return string Postal code
+     */
+    public function getPostalCode()
+    {
+        return $this->getParamOrDefault('postal_code');
     }
 
     /**

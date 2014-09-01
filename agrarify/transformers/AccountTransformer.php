@@ -22,10 +22,10 @@ class AccountTransformer extends AgrarifyTransformer
     public function transform($account, $options = [])
     {
         return [
-            'given_name'        => $this->getValueOrDefault($account, 'given_name'),
-            'surname'           => $this->getValueOrDefault($account, 'surname'),
-            'email_address'     => $this->getValueOrDefault($account, 'email_address'),
-            'verification_code' => $this->getValueOrDefault($account, 'verification_code'),
+            'given_name'        => $account->getGivenName(),
+            'surname'           => $account->getSurname(),
+            'email_address'     => $account->getEmailAddress(),
+            'verification_code' => $account->getVerificationCode(),
         ];
     }
 

@@ -23,14 +23,14 @@ class LocationTransformer extends AgrarifyTransformer
     {
         return [
             'id'          => $location->getId(),
-            'nickname'    => $this->getValueOrDefault($location, 'nickname'),
-            'number'      => $this->getValueOrDefault($location, 'number'),
-            'street'      => $this->getValueOrDefault($location, 'street'),
-            'city'        => $this->getValueOrDefault($location, 'city'),
-            'state'       => $this->getValueOrDefault($location, 'state'),
-            'postal_code' => $this->getValueOrDefault($location, 'postal_code'),
-            'latitude'    => $this->getValueOrDefault($location, 'latitude'),
-            'longitude'   => $this->getValueOrDefault($location, 'longitude'),
+            'nickname'    => $location->getNickname(),
+            'number'      => $location->getNumber(),
+            'street'      => $location->getStreet(),
+            'city'        => $location->getCity(),
+            'state'       => $location->getState(),
+            'postal_code' => $location->getPostalCode(),
+            'latitude'    => $location->getLatitude(),
+            'longitude'   => $location->getLongitude(),
             'is_primary'  => $location->isPrimary(),
         ];
     }
