@@ -27,6 +27,8 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::get('/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@optionsList']);
     Route::resource('veggies', 'VeggiesController');
 
+    Route::get('/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']); // TODO: implement a real search controller once elastic search is up
+
 });
 
 

@@ -6,6 +6,10 @@ use Agrarify\Models\Veggies\Veggie;
 use Agrarify\Transformers\VeggieTransformer;
 use Illuminate\Support\Facades\Response;
 
+// TODO: remove once have search controller
+use League\Geotools\Geotools;
+use League\Geotools\Coordinate\Coordinate;
+
 class VeggiesController extends ApiController {
 
     /**
@@ -267,6 +271,45 @@ class VeggiesController extends ApiController {
             return $this->sendSuccessNoContentResponse();
         }
         return $this->sendErrorNotFoundResponse();
+    }
+
+    /**
+     * Temporary "fake" veggie search (pre-ElasticSearch)
+     *
+     * @return Response
+     */
+    public function testSearch()
+    {
+        $lat = Input::get('latitude', '37.77492950');
+        $lon = Input::get('longitude', '-122.4194155');
+        $type = Input::get('type', '1');
+
+        $coord = new Coordinate($lat . ', ' . $lon);
+        $geotool = new Geotools();
+        $encoded = $geotool->geohash()->encode($coord);
+        $geohash = $encoded->getGeohash();
+
+        $results = [];
+        for ($n = 12; $n > 3; $n--)
+        {
+            $geohash_substring = substr($geohash, 0, $n) . '%';
+            $veggies = Veggie::whereHas('location', function($q) use ($geohash_substring)
+                {
+                    $q->where('geohash', 'like', $geohash_substring);
+                })
+                ->where('type', '=', $type)
+                ->get();
+
+            $veggies_array = iterator_to_array($veggies);
+            $results = array_merge($results, $veggies_array);
+
+            if (count($results) > 10)
+            {
+                break;
+            }
+        }
+
+        return $this->sendSuccessResponse($results);
     }
 
 }
