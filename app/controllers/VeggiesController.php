@@ -88,7 +88,11 @@ class VeggiesController extends ApiController {
      */
     public function show($id)
     {
+        /**
+         * @var $veggie \Agrarify\Models\Veggies\Veggie
+         */
         $veggie = Veggie::find($id);
+
         if ($veggie)
         {
             $options = [];
@@ -109,7 +113,6 @@ class VeggiesController extends ApiController {
      */
     public function store()
     {
-        //dd(Request::instance());
         $payload = $this->assertRequestPayloadItem();
         $veggie = new Veggie($payload);
         $veggie->setAccount($this->getAccount());
@@ -167,11 +170,11 @@ class VeggiesController extends ApiController {
         // Validate and save
         $this->assertValid($veggie);
         $veggie->save();
-        return $this->sendSuccessResponseCreated($veggie);
+        return $this->sendSuccessResponseCreated($veggie, [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true]);
     }
 
     /**
-     * Update a location by id.
+     * Update a veggie by id.
      *
      * @param $id
      * @return Response
@@ -180,29 +183,87 @@ class VeggiesController extends ApiController {
     {
         $payload = $this->assertRequestPayloadItem();
 
-        $location = $this->getAccount()->getLocationById($id);
-        if ($location)
+        $veggie = $this->getAccount()->getVeggieById($id);
+        if ($veggie)
         {
-            $location->fill($payload);
-            $location->calculateGeohash();
-            $this->assertValid($location);
-            return $this->sendSuccessResponse($location);
+            $veggie->fill($payload);
+
+            // Handle the location
+            if (isset($payload['location']))
+            {
+                $location_payload = $payload['location'];
+
+                if (isset($location_payload['id']))
+                {
+                    if ($location_payload['id'] != $veggie->getLocation()->getId())
+                    {
+                        if ($location = $this->getAccount()->getLocationById($location_payload['id']))
+                        {
+                            $veggie->setLocation($location);
+                        }
+                        else
+                        {
+                            return $this->sendErrorResponse(['message' => 'Location with given id does not exist']);
+                        }
+                    }
+                    else
+                    {
+                        $location = $veggie->getLocation();
+                        $location->fill($location_payload);
+                        $this->assertValid($location);
+                        $location->save();
+                    }
+                }
+                else
+                {
+                    $location = new Location($location_payload);
+                    $location->setAccount($this->getAccount());
+                    $this->assertValid($location);
+                    $location->save();
+                    $veggie->setLocation($location);
+                }
+            }
+
+            // Handle availability
+            if (isset($payload['availability']))
+            {
+                $availability_payload = $payload['availability'];
+
+                $availability = $veggie->getAvailability();
+                if ($availability)
+                {
+                    $availability->fill($availability_payload);
+                }
+                else
+                {
+                    $availability = new Availability($availability_payload);
+                }
+
+                $this->assertValid($availability);
+                $availability->save();
+                $veggie->setAvailability($availability);
+            }
+
+            // Validate and save
+            $this->assertValid($veggie);
+            $veggie->save();
+            return $this->sendSuccessResponse($veggie, [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true]);
         }
         return $this->sendErrorNotFoundResponse();
     }
 
     /**
-     * Delete a location by id.
+     * Delete a veggie by id.
      *
      * @param $id
      * @return Response
      */
-    public function deleteLocation($id)
+    public function destroy($id)
     {
-        $location = $this->getAccount()->getLocationById($id);
-        if ($location)
+        $veggie = $this->getAccount()->getVeggieById($id);
+        if ($veggie)
         {
-            $location->delete();
+            $veggie->delete();
             return $this->sendSuccessNoContentResponse();
         }
         return $this->sendErrorNotFoundResponse();

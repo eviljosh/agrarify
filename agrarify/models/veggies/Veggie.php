@@ -50,6 +50,37 @@ class Veggie extends BaseModel {
     ];
 
     /**
+     * Re-index for searching after saving.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = array())
+    {
+        $v = parent::save($options);
+
+        // TODO: ASYNC -- spin off an async reindexing task for this id
+
+        return $v;
+    }
+
+    /**
+     * Delete availability record prior to deleting the model from the database.
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        if ($this->getAvailability())
+        {
+            $this->getAvailability()->delete();  // TODO: ASYNC
+        }
+
+        return parent::delete();
+    }
+
+    /**
      * Defines the many-to-one relationship with accounts
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -57,6 +88,26 @@ class Veggie extends BaseModel {
     public function account()
     {
         return $this->belongsTo('Agrarify\Models\Accounts\Account');
+    }
+
+    /**
+     * Defines the many-to-one relationship with locations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function location()
+    {
+        return $this->belongsTo('Agrarify\Models\Subresources\Location');
+    }
+
+    /**
+     * Defines the many-to-one relationship with availabilities
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function availability()
+    {
+        return $this->belongsTo('Agrarify\Models\Subresources\Availability');
     }
 
     /**
@@ -88,7 +139,7 @@ class Veggie extends BaseModel {
      */
     public function getLocation()
     {
-        return Location::find($this->location_id);
+        return $this->location;
     }
 
     /**
@@ -104,11 +155,7 @@ class Veggie extends BaseModel {
      */
     public function getAvailability()
     {
-        if (isset($this->availability_id))
-        {
-            return Availability::find($this->availability_id);
-        }
-        return null;
+        return $this->availability;
     }
 
     /**
@@ -184,7 +231,14 @@ class Veggie extends BaseModel {
      */
     public function shouldAccountSeeDetails($account)
     {
-        return true; //TODO implement
+        if ($this->account_id == $account->getId())
+        {
+            return true;
+        }
+
+        // TODO: implement logic for accounts that have been granted pickup rights.
+
+        return false;
     }
 
     /**

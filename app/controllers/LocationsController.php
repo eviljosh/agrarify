@@ -79,6 +79,7 @@ class LocationsController extends ApiController {
         {
             $location->fill($payload);
             $this->assertValid($location);
+            $location->save();
             return $this->sendSuccessResponse(
                 $location,
                 [LocationTransformer::OPTIONS_IS_RESOURCE_OWNER => true]

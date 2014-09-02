@@ -68,7 +68,6 @@ class Location extends BaseModel {
      */
     public function getId()
     {
-        $this->save();
         return $this->getParamOrDefault('id');
     }
 
