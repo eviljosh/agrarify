@@ -51,7 +51,7 @@ class Account extends BaseModel {
     }
 
     /**
-     * @return Carbon Created at date
+     * @return \Carbon\Carbon Created at date
      */
     public function getCreatedAt()
     {

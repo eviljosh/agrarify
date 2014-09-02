@@ -3,9 +3,7 @@
 namespace Agrarify\Models\Veggies;
 
 use Agrarify\Models\BaseModel;
-use Agrarify\Models\Accounts\Account;
-use Agrarify\Models\Subresources\Availability;
-use Agrarify\Models\Subresources\Location;
+use Agrarify\Models\Subresources\Message;
 use Carbon\Carbon;
 
 class Veggie extends BaseModel {
@@ -75,6 +73,12 @@ class Veggie extends BaseModel {
         if ($this->getAvailability())
         {
             $this->getAvailability()->delete();  // TODO: ASYNC
+        }
+
+        $messages = $this->getMessages();
+        foreach ($messages as $message)
+        {
+            $message->delete();  // TODO: adjust to be a single query  // TODO: ASYNC
         }
 
         return parent::delete();
@@ -167,6 +171,26 @@ class Veggie extends BaseModel {
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMessages()
+    {
+        return Message::where('other_id', '=', $this->getId())
+            ->whereIn('type', Message::getVeggieMessageTypes())
+            ->get();
+    }
+
+    /**
+     * @return \Agrarify\Models\Subresources\Message
+     */
+    public function getAcceptanceMessage()
+    {
+        return Message::where('other_id', '=', $this->getId())
+            ->where('type', '=', Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
+            ->first();
+    }
+
+    /**
      * @return int Status code
      */
     public function getStatus()
@@ -236,7 +260,11 @@ class Veggie extends BaseModel {
             return true;
         }
 
-        // TODO: implement logic for accounts that have been granted pickup rights.
+        $acceptance = $this->getAcceptanceMessage();
+        if ($acceptance and $acceptance->getRecipientAccount()->getId() == $account->getId())
+        {
+            return true;
+        }
 
         return false;
     }

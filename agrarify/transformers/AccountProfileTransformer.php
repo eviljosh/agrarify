@@ -5,6 +5,7 @@ namespace Agrarify\Transformers;
 class AccountProfileTransformer extends AgrarifyTransformer
 {
     const OPTIONS_IS_RESOURCE_OWNER = 'resource_owner';
+    const OPTIONS_SHOW_SHORT_PROFILE = 'show_short_profile';
 
     /**
      * Constructor
@@ -26,12 +27,18 @@ class AccountProfileTransformer extends AgrarifyTransformer
         $json_array = [
             'profile_slug'    => $profile->getSlug(),
             'display_name'    => $profile->getDisplayName(),
-            'image_url'       => 'not yet implemented',
-            'bio'             => $profile->getBio(),
-            'favorite_veggie' => $profile->getFavoriteVeggie(),
-            'home_location'   => $profile->getHomeLocationString(),
-            'member_since'    => $profile->getAccount()->getMemberSince(),
         ];
+
+        if (!$this->getOption($options, self::OPTIONS_SHOW_SHORT_PROFILE))
+        {
+            $json_array = array_merge($json_array, [
+                'image_url'       => 'not yet implemented',
+                'bio'             => $profile->getBio(),
+                'favorite_veggie' => $profile->getFavoriteVeggie(),
+                'home_location'   => $profile->getHomeLocationString(),
+                'member_since'    => $profile->getAccount()->getMemberSince(),
+            ]);
+        }
 
         if ($this->getOption($options, self::OPTIONS_IS_RESOURCE_OWNER))
         {

@@ -24,12 +24,19 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::put('/accounts/me/locations/{id}', ['as' => 'v1.locations.update', 'uses' => 'LocationsController@update']);
     Route::delete('/accounts/me/locations/{id}', ['as' => 'v1.locations.delete', 'uses' => 'LocationsController@deleteLocation']);
 
-    Route::get('/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@optionsList']);
+    Route::get('/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@listOptions']);
+    Route::get('veggies/messages', ['as' => 'v1.messages.veggiemessageslist', 'uses' => 'MessagesController@listVeggieMessages']);
+    Route::get('veggies/{id}/messages', ['as' => 'v1.messages.veggiemessages', 'uses' => 'MessagesController@showVeggieMessages']);
+    Route::post('veggies/{id}/messages', ['as' => 'v1.messages.createveggiemessage', 'uses' => 'MessagesController@createVeggieMessage']);
     Route::resource('veggies', 'VeggiesController');
 
-    Route::get('/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']); // TODO: implement a real search controller once elastic search is up
+
+    // TODO: implement a real search controller once elastic search is up
+    Route::get('/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']);
 
 });
+
+
 
 
 

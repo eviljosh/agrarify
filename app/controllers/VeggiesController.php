@@ -25,7 +25,7 @@ class VeggiesController extends ApiController {
      *
      * @return Response
      */
-    public function optionsList()
+    public function listOptions()
     {
         return Response::json([ 'veggie_options' => [
             1 => ['name' => 'Apples', 'collective_noun' => 'apples'],
