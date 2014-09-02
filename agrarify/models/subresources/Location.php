@@ -152,13 +152,25 @@ class Location extends BaseModel {
     }
 
     /**
+     * @return \League\Geotools\Coordinate\Coordinate|null
+     */
+    public function getCoordinate()
+    {
+        if ($this->getLatitude() and $this->getLongitude())
+        {
+            return new Coordinate($this->getLatitude() . ', ' . $this->getLongitude());
+        }
+        return null;
+    }
+
+    /**
      * Sets geohash if longitude and latitude are present
      */
     public function calculateGeohash()
     {
-        if ($this->getLatitude() and $this->getLongitude())
+        $coord = $this->getCoordinate();
+        if ($coord)
         {
-            $coord = new Coordinate($this->getLatitude() . ', ' . $this->getLongitude());
             $geotool = new Geotools();
             $encoded = $geotool->geohash()->encode($coord);
             $hash = $encoded->getGeohash();

@@ -300,6 +300,16 @@ class VeggiesController extends ApiController {
                 ->where('type', '=', $type)
                 ->get();
 
+            $current_veggies = [];
+            foreach ($veggies as $veggie)
+            {
+                $veggie_coord = $veggie->getLocation()->getCoordinate();
+                $point = $geotool->point()->setFrom($coord)->setTo($veggie_coord);
+                $veggie->direction = $point->initialCardinal();
+
+                $distance = $geotool->distance()->setFrom($coord)->setTo($veggie_coord);
+                $veggie->distance = $distance->in('mi')->haversine();
+            }
             $veggies_array = iterator_to_array($veggies);
             $results = array_merge($results, $veggies_array);
 

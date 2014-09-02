@@ -55,6 +55,17 @@ class VeggieTransformer extends AgrarifyTransformer
             'availability' => $availability ? $this->availability_transformer->transform($availability) : null,
         ];
 
+        // TODO: remove this once temporary test search functionality is no longer in use
+        if (isset($veggie->distance) and isset($veggie->direction))
+        {
+            $distance_params = [
+                'distance' => $veggie->distance,
+                'direction' => $veggie->direction
+            ];
+
+            $json_array = array_merge($json_array, $distance_params);
+        }
+
         return $json_array;
     }
 
