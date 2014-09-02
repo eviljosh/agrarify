@@ -27,47 +27,59 @@ class VeggiesController extends ApiController {
      */
     public function listOptions()
     {
-        return Response::json([ 'veggie_options' => [
-            1 => ['name' => 'Apples', 'collective_noun' => 'apples'],
-            2 => ['name' => 'Asparagus', 'collective_noun' => 'bunches'],
-            3 => ['name' => 'Artichokes', 'collective_noun' => 'artichokes'],
-            4 => ['name' => 'Avocados', 'collective_noun' => 'avocados'],
-            5 => ['name' => 'Broccoli', 'collective_noun' => 'heads'],
-            6 => ['name' => 'Beans (Green)', 'collective_noun' => 'handfulls'],
-            7 => ['name' => 'Beans (Dry)', 'collective_noun' => 'handfulls'],
-            8 => ['name' => 'Bok Choy', 'collective_noun' => 'heads'],
-            9 => ['name' => 'Basil', 'collective_noun' => 'bunches'],
-            10 => ['name' => 'Beets', 'collective_noun' => 'beets'],
-            11 => ['name' => 'Cilantro', 'collective_noun' => 'bunches'],
-            12 => ['name' => 'Cabbage', 'collective_noun' => 'heads'],
-            13 => ['name' => 'Cucumbers', 'collective_noun' => 'cucumbers'],
-            14 => ['name' => 'Carrots', 'collective_noun' => 'bunches'],
-            15 => ['name' => 'Cauliflower', 'collective_noun' => 'heads'],
-            16 => ['name' => 'Celery', 'collective_noun' => 'heads'],
-            17 => ['name' => 'Cherries', 'collective_noun' => 'handfulls'],
-            18 => ['name' => 'Eggplant', 'collective_noun' => 'eggplants'],
-            19 => ['name' => 'Garlic', 'collective_noun' => 'heads'],
-            20 => ['name' => 'Kale', 'collective_noun' => 'heads'],
-            21 => ['name' => 'Lettuce', 'collective_noun' => 'heads'],
-            22 => ['name' => 'Lemons', 'collective_noun' => 'lemons'],
-            23 => ['name' => 'Limes', 'collective_noun' => 'limes'],
-            24 => ['name' => 'Oranges', 'collective_noun' => 'oranges'],
-            25 => ['name' => 'Radishes', 'collective_noun' => 'bunches'],
-            26 => ['name' => 'Spinach', 'collective_noun' => 'bunches'],
-            27 => ['name' => 'Chard', 'collective_noun' => 'bunches'],
-            28 => ['name' => 'Turnips', 'collective_noun' => 'bunches'],
-            29 => ['name' => 'Pumpkins', 'collective_noun' => 'pumpkins'],
-            30 => ['name' => 'Squashes', 'collective_noun' => 'squashes'],
-            31 => ['name' => 'Peppers (Bell)', 'collective_noun' => 'peppers'],
-            32 => ['name' => 'Peppers (Hot)', 'collective_noun' => 'peppers'],
-            33 => ['name' => 'Tomatoes', 'collective_noun' => 'tomatoes'],
-            34 => ['name' => 'Onions', 'collective_noun' => 'onions'],
-            35 => ['name' => 'Leeks', 'collective_noun' => 'bunches'],
-            36 => ['name' => 'Plums', 'collective_noun' => 'plums'],
-            37 => ['name' => 'Grapes', 'collective_noun' => 'bunches'],
-            38 => ['name' => 'Potatoes', 'collective_noun' => 'potatoes'],
-            39 => ['name' => 'Potatoes (Sweet)', 'collective_noun' => 'potatoes'],
-        ]]);
+        $options = [
+            [1, 'Apples', 'apples'],
+            [2, 'Asparagus', 'bunches'],
+            [3, 'Artichokes', 'artichokes'],
+            [4, 'Avocados', 'avocados'],
+            [5, 'Broccoli', 'heads'],
+            [6,  'Beans (Green)', 'handfulls'],
+            [7, 'Beans (Dry)', 'handfulls'],
+            [8, 'Bok Choy', 'heads'],
+            [9, 'Basil', 'bunches'],
+            [10, 'Beets', 'beets'],
+            [11, 'Cilantro', 'bunches'],
+            [12, 'Cabbage', 'heads'],
+            [13, 'Cucumbers', 'cucumbers'],
+            [14, 'Carrots', 'bunches'],
+            [15, 'Cauliflower', 'heads'],
+            [16, 'Celery', 'heads'],
+            [17, 'Cherries', 'handfulls'],
+            [18, 'Eggplant', 'eggplants'],
+            [19, 'Garlic', 'heads'],
+            [20, 'Kale', 'heads'],
+            [21, 'Lettuce', 'heads'],
+            [22, 'Lemons', 'lemons'],
+            [23, 'Limes', 'limes'],
+            [24, 'Oranges', 'oranges'],
+            [25, 'Radishes', 'bunches'],
+            [26, 'Spinach', 'bunches'],
+            [27, 'Chard', 'bunches'],
+            [28, 'Turnips', 'bunches'],
+            [29, 'Pumpkins', 'pumpkins'],
+            [30, 'Squashes', 'squashes'],
+            [31, 'Peppers (Bell)', 'peppers'],
+            [32, 'Peppers (Hot)', 'peppers'],
+            [33, 'Tomatoes', 'tomatoes'],
+            [34, 'Onions', 'onions'],
+            [35, 'Leeks', 'bunches'],
+            [36, 'Plums', 'plums'],
+            [37, 'Grapes', 'bunches'],
+            [38, 'Potatoes', 'potatoes'],
+            [39, 'Potatoes (Sweet)', 'potatoes'],
+        ];
+
+        $veggie_options = [];
+        foreach ($options as $option)
+        {
+            $veggie_options[] = [
+                'id' => $option[0],
+                'name' => $option[1],
+                'collective_noun' => $option[2],
+            ];
+        }
+
+        return Response::json(['veggie_options' => $veggie_options]);
     }
 
 
