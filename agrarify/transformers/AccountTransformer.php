@@ -4,13 +4,6 @@ namespace Agrarify\Transformers;
 
 class AccountTransformer extends AgrarifyTransformer
 {
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'accounts';
-    }
 
     /**
      * Transforms a single model record.

@@ -11,7 +11,6 @@ class MessageTransformer extends AgrarifyTransformer
      */
     public function __construct($account)
     {
-        $this->plural_name = 'messages';
         $this->account = $account;
 
         $this->account_profile_transformer = new AccountProfileTransformer();

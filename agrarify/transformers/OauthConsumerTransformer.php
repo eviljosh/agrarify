@@ -4,13 +4,6 @@ namespace Agrarify\Transformers;
 
 class OauthConsumerTransformer extends AgrarifyTransformer
 {
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'oauth_consumers';
-    }
 
     /**
      * Transforms a single model record.

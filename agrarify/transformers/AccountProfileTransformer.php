@@ -8,14 +8,6 @@ class AccountProfileTransformer extends AgrarifyTransformer
     const OPTIONS_SHOW_SHORT_PROFILE = 'show_short_profile';
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'account_profiles';
-    }
-
-    /**
      * Transforms a single model record.
      *
      * @param \Agrarify\Models\Accounts\AccountProfile $profile

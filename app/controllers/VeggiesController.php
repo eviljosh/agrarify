@@ -79,7 +79,7 @@ class VeggiesController extends ApiController {
             ];
         }
 
-        return Response::json(['veggie_options' => $veggie_options]);
+        return Response::json(['items' => $veggie_options]);
     }
 
 

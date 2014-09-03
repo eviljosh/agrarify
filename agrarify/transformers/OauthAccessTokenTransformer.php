@@ -4,13 +4,6 @@ namespace Agrarify\Transformers;
 
 class OauthAccessTokenTransformer extends AgrarifyTransformer
 {
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'oauth_access_tokens';
-    }
 
     /**
      * Transforms a single model record.

@@ -8,14 +8,6 @@ class LocationTransformer extends AgrarifyTransformer
     const OPTIONS_ROUGH_ONLY = 'rough_only';
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'locations';
-    }
-
-    /**
      * Transforms a single model record.
      *
      * @param \Agrarify\Models\Subresources\Location $location

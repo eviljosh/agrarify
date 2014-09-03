@@ -23,7 +23,7 @@ abstract class AgrarifyTransformer
      *
      * @var string
      */
-    protected $plural_name = '';
+    protected $plural_name = 'items';
 
     /**
      * Transforms a collection of model records.

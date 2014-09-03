@@ -4,13 +4,6 @@ namespace Agrarify\Transformers;
 
 class AvailabilityTransformer extends AgrarifyTransformer
 {
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->plural_name = 'availabilities';
-    }
 
     /**
      * Transforms a single model record.

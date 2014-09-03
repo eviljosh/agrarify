@@ -11,8 +11,6 @@ class VeggieTransformer extends AgrarifyTransformer
      */
     public function __construct()
     {
-        $this->plural_name = 'veggies';
-
         $this->availability_transformer = new AvailabilityTransformer();
         $this->location_transformer = new LocationTransformer();
         $this->profile_transformer = new AccountProfileTransformer();
@@ -43,23 +41,24 @@ class VeggieTransformer extends AgrarifyTransformer
         $availability = $veggie->getAvailability();
 
         $json_array = [
-            'id'    => $veggie->getId(),
-            'status'    => $veggie->getStatus(),
-            'type'       => $veggie->getType(),
-            'freshness'  => $veggie->getFreshness(),
-            'quantity' => $veggie->getQuantity(),
-            'notes'   => $veggie->getNotes(),
-            'images'    => 'not yet implemented',
+            'id'            => $veggie->getId(),
+            'status'        => $veggie->getStatus(),
+            'type'          => $veggie->getType(),
+            'freshness'     => $veggie->getFreshness(),
+            'quantity'      => $veggie->getQuantity(),
+            'notes'         => $veggie->getNotes(),
+            'created_at'    => $veggie->getCreatedAt()->toDateTimeString(),
+            'images'        => 'not yet implemented',
             'owner_profile' => $this->profile_transformer->transform($veggie->getAccount()->getProfile()),
-            'location' => $location_array,
-            'availability' => $availability ? $this->availability_transformer->transform($availability) : null,
+            'location'      => $location_array,
+            'availability'  => $availability ? $this->availability_transformer->transform($availability) : null,
         ];
 
         // TODO: remove this once temporary test search functionality is no longer in use
         if (isset($veggie->distance) and isset($veggie->direction))
         {
             $distance_params = [
-                'distance' => $veggie->distance,
+                'distance'  => $veggie->distance,
                 'direction' => $veggie->direction
             ];
 

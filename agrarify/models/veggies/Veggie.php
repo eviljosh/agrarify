@@ -123,6 +123,14 @@ class Veggie extends BaseModel {
     }
 
     /**
+     * @return \Carbon\Carbon Created at date
+     */
+    public function getCreatedAt()
+    {
+        return $this->getParamOrDefault('created_at');
+    }
+
+    /**
      * @return \Agrarify\Models\Accounts\Account
      */
     public function getAccount()
