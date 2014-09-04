@@ -295,7 +295,7 @@ class VeggiesController extends ApiController {
     {
         $lat = Input::get('latitude', '37.77492950');
         $lon = Input::get('longitude', '-122.4194155');
-        $type = Input::get('type', '1');
+        $type = Input::get('type', null);
 
         $coord = new Coordinate($lat . ', ' . $lon);
         $geotool = new Geotools();
@@ -303,28 +303,45 @@ class VeggiesController extends ApiController {
         $geohash = $encoded->getGeohash();
 
         $results = [];
+        $ids_seen = [];
         for ($n = 12; $n > 3; $n--)
         {
             $geohash_substring = substr($geohash, 0, $n) . '%';
-            $veggies = Veggie::whereHas('location', function($q) use ($geohash_substring)
+
+            $veggies_query = Veggie::whereHas('location', function($q) use ($geohash_substring)
                 {
                     $q->where('geohash', 'like', $geohash_substring);
-                })
-                ->where('type', '=', $type)
-                ->get();
+                });
+            if ($type)
+            {
+                if (is_array($type))
+                {
+                    $veggies_query = $veggies_query->whereIn('type', $type);
+                }
+                else
+                {
+                    $veggies_query = $veggies_query->where('type', '=', $type);
+                }
+            }
+            $veggies = $veggies_query->get();
 
-            $current_veggies = [];
             foreach ($veggies as $veggie)
             {
+                if (in_array($veggie->getId(), $ids_seen))
+                {
+                    break;
+                }
+
                 $veggie_coord = $veggie->getLocation()->getCoordinate();
                 $point = $geotool->point()->setFrom($coord)->setTo($veggie_coord);
                 $veggie->direction = $point->initialCardinal();
 
                 $distance = $geotool->distance()->setFrom($coord)->setTo($veggie_coord);
                 $veggie->distance = $distance->in('mi')->haversine();
+
+                $results[] = $veggie;
+                $ids_seen[] = $veggie->getId();
             }
-            $veggies_array = iterator_to_array($veggies);
-            $results = array_merge($results, $veggies_array);
 
             if (count($results) > 10)
             {
