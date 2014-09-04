@@ -28,7 +28,7 @@ class AccountProfileTransformer extends AgrarifyTransformer
                 'bio'             => $profile->getBio(),
                 'favorite_veggie' => $profile->getFavoriteVeggie(),
                 'home_location'   => $profile->getHomeLocationString(),
-                'member_since'    => $profile->getAccount()->getMemberSince(),
+                'member_since'    => $profile->getAccount()->getCreatedAt()->toDateString(),
             ]);
         }
 

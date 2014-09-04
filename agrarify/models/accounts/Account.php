@@ -198,14 +198,6 @@ class Account extends BaseModel {
     }
 
     /**
-     * @return string Date account was created
-     */
-    public function getMemberSince()
-    {
-        return $this->getCreatedAt()->toFormattedDateString();
-    }
-
-    /**
      * Returns primary location or, if none exists, some location associated with the account.
      *
      * @return \Agrarify\Models\Subresources\Location
