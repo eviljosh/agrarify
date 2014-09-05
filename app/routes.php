@@ -9,6 +9,11 @@ Route::get('/', 'HomeController@showBasicStatus');
 Route::post('/v1/oauth_consumer', ['as' => 'v1.oauthconsumers.create', 'uses' => 'OauthController@createConsumer']);
 Route::post('/v1/access_token', ['as' => 'v1.accesstokens.create', 'uses' => 'OauthController@createAccessToken']);
 
+// Veggie endpoints available without login
+Route::get('/v1/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@listOptions']);
+// TODO: implement a real search controller once elastic search is up
+Route::get('/v1/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']);
+
 // API v1 Resource endpoints
 Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
 
@@ -24,15 +29,11 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::put('/accounts/me/locations/{id}', ['as' => 'v1.locations.update', 'uses' => 'LocationsController@update']);
     Route::delete('/accounts/me/locations/{id}', ['as' => 'v1.locations.delete', 'uses' => 'LocationsController@deleteLocation']);
 
-    Route::get('/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@listOptions']);
+
     Route::get('veggies/messages', ['as' => 'v1.messages.veggiemessageslist', 'uses' => 'MessagesController@listVeggieMessages']);
     Route::get('veggies/{id}/messages', ['as' => 'v1.messages.veggiemessages', 'uses' => 'MessagesController@showVeggieMessages']);
     Route::post('veggies/{id}/messages', ['as' => 'v1.messages.createveggiemessage', 'uses' => 'MessagesController@createVeggieMessage']);
     Route::resource('veggies', 'VeggiesController');
-
-
-    // TODO: implement a real search controller once elastic search is up
-    Route::get('/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']);
 
 });
 
