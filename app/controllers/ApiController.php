@@ -37,10 +37,11 @@ class ApiController extends BaseController {
     /**
      * @param mixed $payload The Model object or Collection to send
      * @param array $transform_options Optional options to pass to the transformer
+     * @param array $metadata Optional metadata to return with the response
      * @param int $http_status
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function sendSuccessResponse($payload, $transform_options = [], $http_status = HttpResponse::HTTP_OK)
+    protected function sendSuccessResponse($payload, $transform_options = [], $metadata = [], $http_status = HttpResponse::HTTP_OK)
     {
         $json_payload = '';
 
@@ -56,6 +57,10 @@ class ApiController extends BaseController {
                 $this->transformer->getPluralName() => $this->transformer->transformCollection($payload, $transform_options)
             ];
         }
+        if (!empty($metadata))
+        {
+            $json_payload['metadata'] = $metadata;
+        }
 
         return Response::json($json_payload, $http_status);
     }
@@ -67,7 +72,7 @@ class ApiController extends BaseController {
      */
     protected function sendSuccessResponseCreated($payload, $transform_options = [])
     {
-        return $this->sendSuccessResponse($payload, $transform_options, HttpResponse::HTTP_CREATED);
+        return $this->sendSuccessResponse($payload, $transform_options, [], HttpResponse::HTTP_CREATED);
     }
 
     /**
@@ -75,7 +80,7 @@ class ApiController extends BaseController {
      */
     protected function sendSuccessNoContentResponse()
     {
-        return $this->sendSuccessResponse([], [], HttpResponse::HTTP_NO_CONTENT);
+        return $this->sendSuccessResponse([], [], [], HttpResponse::HTTP_NO_CONTENT);
     }
 
     /**

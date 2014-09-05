@@ -152,6 +152,14 @@ class Location extends BaseModel {
     }
 
     /**
+     * @return string The calculated geohash for this location
+     */
+    public function getGeohash()
+    {
+        return $this->getParamOrDefault('geohash');
+    }
+
+    /**
      * @return \League\Geotools\Coordinate\Coordinate|null
      */
     public function getCoordinate()
