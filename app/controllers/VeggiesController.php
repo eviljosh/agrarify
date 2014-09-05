@@ -331,7 +331,7 @@ class VeggiesController extends ApiController {
             {
                 if (in_array($veggie->getId(), $ids_seen))
                 {
-                    break;
+                    continue;
                 }
 
                 $veggie_coord = $veggie->getLocation()->getCoordinate();
@@ -356,7 +356,7 @@ class VeggiesController extends ApiController {
             'search_longitude' => $lon,
             'search_geohash'   => $geohash,
             'substrings'       => $geohash_substrings,
-            'search_type'      => $type
+            'search_type'      => $type,
         ];
 
         return $this->sendSuccessResponse($results, [], $metadata);
