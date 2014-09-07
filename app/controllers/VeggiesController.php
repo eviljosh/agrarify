@@ -3,6 +3,7 @@
 use Agrarify\Models\Subresources\Availability;
 use Agrarify\Models\Subresources\Location;
 use Agrarify\Models\Veggies\Veggie;
+use Agrarify\Models\Veggies\VeggieOptions;
 use Agrarify\Transformers\VeggieTransformer;
 use Illuminate\Support\Facades\Response;
 
@@ -27,47 +28,7 @@ class VeggiesController extends ApiController {
      */
     public function listOptions()
     {
-        $options = [
-            [1, 'Apples', 'apple', 'apples'],
-            [2, 'Asparagus', 'asparagus', 'bunches'],
-            [3, 'Artichokes', 'artichoke', 'artichokes'],
-            [4, 'Avocados', 'avocado', 'avocados'],
-            [5, 'Broccoli', 'broccoli', 'heads'],
-            [6,  'Beans (Green)', 'bean', 'handfulls'],
-            [7, 'Beans (Dry)', 'bean', 'handfulls'],
-            [8, 'Bok Choy', 'bok choy', 'heads'],
-            [9, 'Basil', 'basil', 'bunches'],
-            [10, 'Beets', 'beet', 'beets'],
-            [11, 'Cilantro', 'cilantro', 'bunches'],
-            [12, 'Cabbage', 'cabbage', 'heads'],
-            [13, 'Cucumbers', 'cucumber', 'cucumbers'],
-            [14, 'Carrots', 'carrot', 'bunches'],
-            [15, 'Cauliflower', 'cauliflower', 'heads'],
-            [16, 'Celery', 'celery', 'heads'],
-            [17, 'Cherries', 'cherry', 'handfulls'],
-            [18, 'Eggplant', 'eggplant', 'eggplants'],
-            [19, 'Garlic', 'garlic', 'heads'],
-            [20, 'Kale', 'kale', 'heads'],
-            [21, 'Lettuce', 'lettuce', 'heads'],
-            [22, 'Lemons', 'lemon', 'lemons'],
-            [23, 'Limes', 'lime', 'limes'],
-            [24, 'Oranges', 'orange', 'oranges'],
-            [25, 'Radishes', 'radish', 'bunches'],
-            [26, 'Spinach', 'spinach', 'bunches'],
-            [27, 'Chard', 'chard', 'bunches'],
-            [28, 'Turnips', 'turnip', 'bunches'],
-            [29, 'Pumpkins', 'pumpkin', 'pumpkins'],
-            [30, 'Squashes', 'squash', 'squashes'],
-            [31, 'Peppers (Bell)', 'pepper', 'peppers'],
-            [32, 'Peppers (Hot)', 'pepper', 'peppers'],
-            [33, 'Tomatoes', 'tomato', 'tomatoes'],
-            [34, 'Onions', 'onion', 'onions'],
-            [35, 'Leeks', 'leek', 'bunches'],
-            [36, 'Plums', 'plum', 'plums'],
-            [37, 'Grapes', 'grape', 'bunches'],
-            [38, 'Potatoes', 'potato', 'potatoes'],
-            [39, 'Potatoes (Sweet)', 'potato', 'potatoes'],
-        ];
+        $options = VeggieOptions::getOptions();
 
         $veggie_options = [];
         foreach ($options as $option)
@@ -77,10 +38,11 @@ class VeggiesController extends ApiController {
                 'name' => $option[1],
                 'singular_name' => $option[2],
                 'collective_noun' => $option[3],
+                'image_name' => $option[4],
             ];
         }
 
-        return Response::json(['items' => $veggie_options]);
+        return Response::json(['items' => $veggie_options, 'metadata' => VeggieOptions::getMetadata()]);
     }
 
 
