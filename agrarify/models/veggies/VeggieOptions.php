@@ -63,7 +63,7 @@ class VeggieOptions {
     public static function getMetadata()
     {
         return [
-            'root_url'      => Config::get('agrarify.static_veggie_icons_root_url'),
+            'image_root_url'      => Config::get('agrarify.static_veggie_icons_root_url'),
             'mdpi_suffix'   => '_mdpi.png',
             'hdpi_suffix'   => '_hdpi.png',
             'xhdpi_suffix'  => '_xhdpi.png',
