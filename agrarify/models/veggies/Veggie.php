@@ -115,6 +115,16 @@ class Veggie extends BaseModel {
     }
 
     /**
+     * Defines the one-to-many relationship with veggie images
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
+        return $this->hasMany('Agrarify\Models\Veggies\VeggieImage');
+    }
+
+    /**
      * @return int Id
      */
     public function getId()
@@ -196,6 +206,23 @@ class Veggie extends BaseModel {
         return Message::where('other_id', '=', $this->getId())
             ->where('type', '=', Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
             ->first();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getImages()
+    {
+        return $this->images()->orderBy('is_primary', 'DESC')->orderBy('created_at', 'ASC')->get();
+    }
+
+    /**
+     * @param $id
+     * @return \Agrarify\Models\Veggies\VeggieImage
+     */
+    public function getImageById($id)
+    {
+        return $this->images()->where('id', '=', $id)->first();
     }
 
     /**

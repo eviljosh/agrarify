@@ -6,7 +6,8 @@
 	"require": {
         "doctrine/dbal": "2.3.4",
         "laravel/framework": "4.2.*",
-        "league/geotools": "@stable"
+        "league/geotools": "@stable",
+        "aws/aws-sdk-php": "2.*"
 	},
     "require-dev": {
         "fzaninotto/faker": "1.4",

@@ -12,6 +12,7 @@ class VeggieTransformer extends AgrarifyTransformer
     public function __construct()
     {
         $this->availability_transformer = new AvailabilityTransformer();
+        $this->image_transformer = new VeggieImageTransformer();
         $this->location_transformer = new LocationTransformer();
         $this->profile_transformer = new AccountProfileTransformer();
     }
@@ -48,7 +49,7 @@ class VeggieTransformer extends AgrarifyTransformer
             'quantity'      => $veggie->getQuantity(),
             'notes'         => $veggie->getNotes(),
             'created_at'    => $veggie->getCreatedAt()->toDateTimeString(),
-            'images'        => 'not yet implemented',
+            'images'        => $this->image_transformer->transformCollection($veggie->getImages()),
             'owner_profile' => $this->profile_transformer->transform($veggie->getAccount()->getProfile()),
             'location'      => $location_array,
             'availability'  => $availability ? $this->availability_transformer->transform($availability) : null,
