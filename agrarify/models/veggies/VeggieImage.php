@@ -91,7 +91,7 @@ class VeggieImage extends BaseModel {
      */
     public function isPrimary()
     {
-        return $this->getParamOrDefault('is_primary', false);
+        return (boolean) $this->getParamOrDefault('is_primary', false);
     }
 
     /**
