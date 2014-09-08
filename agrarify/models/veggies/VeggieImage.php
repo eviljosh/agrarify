@@ -2,6 +2,7 @@
 
 namespace Agrarify\Models\Veggies;
 
+use Agrarify\Lib\ImageStorageAdapter;
 use Agrarify\Models\BaseModel;
 
 class VeggieImage extends BaseModel {
@@ -107,7 +108,7 @@ class VeggieImage extends BaseModel {
      */
     public function getDownloadUrl()
     {
-        return 'not yet implemented';
+        return ImageStorageAdapter::getUrlForVeggieImage($this->getGuid());
     }
 
     /**
@@ -117,7 +118,7 @@ class VeggieImage extends BaseModel {
      */
     public function setImageFile($file)
     {
-        // TODO
+        ImageStorageAdapter::storeVeggieImage($this->getGuid(), $file);
     }
 
 }

@@ -65,4 +65,26 @@ class VeggieImagesController extends ApiController {
         return $this->sendErrorNotFoundResponse();
     }
 
+    /**
+     * Delete an image associated with the given veggie.
+     *
+     * @param $veggie_id
+     * @param $image_id
+     * @return Response
+     */
+    public function destroy($veggie_id, $image_id)
+    {
+        $veggie = $this->getAccount()->getVeggieById($veggie_id);
+        if ($veggie)
+        {
+            $image = $veggie->getImageById($image_id);
+            if ($image)
+            {
+                $image->delete();
+                return $this->sendSuccessNoContentResponse();
+            }
+        }
+        return $this->sendErrorNotFoundResponse();
+    }
+
 }
