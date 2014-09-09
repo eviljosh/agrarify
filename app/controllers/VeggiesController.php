@@ -276,8 +276,9 @@ class VeggiesController extends ApiController {
             $veggies_query = Veggie::whereHas('location', function($q) use ($geohash_substring)
                 {
                     $q->where('geohash', 'like', $geohash_substring);
-                });
-            $veggies_query = $veggies_query->where('created_at', '>', Carbon::now()->subDays(7)->toDateTimeString());
+                })
+                ->where('created_at', '>', Carbon::now()->subDays(7)->toDateTimeString())
+                ->where('status', '=', Veggie::STATUS_AVAILABLE);
             if ($type)
             {
                 if (is_array($type))
