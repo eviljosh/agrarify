@@ -143,7 +143,7 @@ class VeggiesController extends ApiController {
         }
         if (!$veggie->getNotes())
         {
-            $veggie->setNotes('Looking for a good home!');
+            $veggie->setNotes('');
         }
 
         // Validate and save
