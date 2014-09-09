@@ -2,6 +2,8 @@
 
 use Agrarify\Models\Accounts\Account;
 use Agrarify\Transformers\AccountTransformer;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 
 class AccountsController extends ApiController {
@@ -46,6 +48,7 @@ class AccountsController extends ApiController {
 
         $payload = $this->assertRequestPayloadItem();
         $account = $this->getAccount();
+        $preexisting_email = $account->getEmailAddress();
 
         // We validate emails as unique, so we need to do a little dance to avoid trying to revalidate the existing one.
         $should_validate_email = true;
@@ -76,8 +79,26 @@ class AccountsController extends ApiController {
             $account->setEmailAddress($current_email);
         }
 
+        if ($preexisting_email != $account->getEmailAddress()) // TODO: refactor this to only have one boolean throughout
+        {
+            $account->setVerificationCode('');
+        }
+
         // Save and return the updated account.
         $account->save();
+
+        if ($preexisting_email != $account->getEmailAddress())
+        {
+            //TODO: ASYNC laravel even has hooks to queue up emails natively
+            //TODO: refactor this into account
+            Mail::send('emails.agrarify.new_account_confirmation', [], function($message) use ($account)
+            {
+                $message->from(Config::get('agrarify.support_address'), Config::get('agrarify.app_name'));
+                $message->to($account->getEmailAddress());
+                $message->subject('Please verify your email with ' . Config::get('agrarify.app_name'));
+            });
+        }
+
         return $this->sendSuccessResponse($account);
 	}
 

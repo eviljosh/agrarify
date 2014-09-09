@@ -10,6 +10,8 @@ class Account extends BaseModel {
 
     const CREATE_CODE_MOBILE_APP = 'M';
 
+    const VERIFICATION_CODE_EMAIL = 'E';
+
     /**
      * The database table used by the model.
      *
@@ -104,6 +106,33 @@ class Account extends BaseModel {
     public function getVerificationCode()
     {
         $this->getParamOrDefault('verification_code');
+    }
+
+    /**
+     * Sets verification code and updates verification timestamp appropriately
+     *
+     * @param string $code
+     */
+    public function setVerificationCode($code)
+    {
+        $this->verification_code = $code;
+
+        if (!empty($code))
+        {
+            $this->setVerificationTimestampToNow();
+        }
+        else
+        {
+            $this->verification_timestamp = null;
+        }
+    }
+
+    /**
+     * Updates verification timestamp to present
+     */
+    public function setVerificationTimestampToNow()
+    {
+        $this->verification_timestamp = Carbon::now()->getTimestamp();
     }
 
     /**
