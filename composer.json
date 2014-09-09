@@ -7,7 +7,8 @@
         "doctrine/dbal": "2.3.4",
         "laravel/framework": "4.2.*",
         "league/geotools": "@stable",
-        "aws/aws-sdk-php": "2.*"
+        "aws/aws-sdk-php": "2.*",
+        "guzzlehttp/guzzle": "~4.0"
 	},
     "require-dev": {
         "fzaninotto/faker": "1.4",
