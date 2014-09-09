@@ -5,6 +5,7 @@ use Agrarify\Models\Subresources\Location;
 use Agrarify\Models\Veggies\Veggie;
 use Agrarify\Models\Veggies\VeggieOptions;
 use Agrarify\Transformers\VeggieTransformer;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 
 // TODO: remove once have search controller
@@ -276,6 +277,7 @@ class VeggiesController extends ApiController {
                 {
                     $q->where('geohash', 'like', $geohash_substring);
                 });
+            $veggies_query = $veggies_query->where('created_at', '>', Carbon::now()->subDays(7)->toDateTimeString());
             if ($type)
             {
                 if (is_array($type))
