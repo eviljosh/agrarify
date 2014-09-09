@@ -55,7 +55,7 @@ class VeggiesController extends ApiController {
 	public function index()
 	{
         return $this->sendSuccessResponse(
-            Veggie::fetchByAccountForDaysPast($this->getAccount()),
+            Veggie::fetchByAccountForDaysPast($this->getAccount(), 10),
             [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true]
         );
 	}
