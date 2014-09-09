@@ -268,7 +268,7 @@ class VeggiesController extends ApiController {
         $results = [];
         $ids_seen = [];
         $geohash_substrings = [];
-        for ($n = 12; $n > 3; $n--)
+        for ($n = 11; $n > 3; $n--)
         {
             $geohash_substring = substr($geohash, 0, $n) . '%';
             $geohash_substrings[] = $geohash_substring;
