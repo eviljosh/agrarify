@@ -172,8 +172,21 @@ class ApiController extends BaseController {
             $messages = [];
             foreach ($e->getValidationErrors() as $field_name => $errors)
             {
+                $error_code = ApiErrorException::ERROR_CODE_VALIDATION;
+                if ($model instanceof \Agrarify\Models\Accounts\Account)
+                {
+                    if ($errors[0] == 'The email address has already been taken.')
+                    {
+                        $error_code = ApiErrorException::ERROR_CODE_EMAIL_ALREADY_TAKEN;
+                    }
+                    elseif ($errors[0] == 'The email address must be a valid email address.')
+                    {
+                        $error_code = ApiErrorException::ERROR_CODE_EMAIL_INVALID;
+                    }
+                }
+
                 $message = $field_name . ' - ' . $errors[0];
-                $messages[] = ['message' => $message, 'code' => ApiErrorException::ERROR_CODE_VALIDATION];
+                $messages[] = ['message' => $message, 'code' => $error_code];
             }
 
             throw new ApiErrorException($messages, HttpResponse::HTTP_BAD_REQUEST);

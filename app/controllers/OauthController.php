@@ -1,4 +1,6 @@
 <?php
+
+use Agrarify\Api\Exception\ApiErrorException;
 use Agrarify\Models\Accounts\Account;
 use Agrarify\Models\Accounts\AccountProfile;
 use Agrarify\Models\Oauth2\OauthAccessToken;
@@ -105,12 +107,20 @@ class OauthController extends ApiController {
         {
             $account = null;
 
-            if (!isset($payload['username']) or
-                !isset($payload['password']) or
-                !($account = Account::fetchByEmail($payload['username'])) or
-                !$account->isPasswordValid($payload['password']))
+            if (!($account = Account::fetchByEmail($payload['username'])))
             {
-                return $this->sendErrorForbiddenResponse(['message' => 'Username and password do not match.']);
+                return $this->sendErrorForbiddenResponse([
+                    'message' => 'Email address does not match any account.',
+                    'code' => ApiErrorException::ERROR_CODE_EMAIL_NOT_FOUND,
+                ]);
+            }
+
+            if (!$account->isPasswordValid($payload['password']))
+            {
+                return $this->sendErrorForbiddenResponse([
+                    'message' => 'Username and password do not match.',
+                    'code' => ApiErrorException::ERROR_CODE_EMAIL_PASSWORD_MISMATCH,
+                ]);
             }
         }
 

@@ -11,6 +11,11 @@ class ApiErrorException extends \Exception
 {
     const ERROR_CODE_NO_CODE_ASSIGNED = 999;
     const ERROR_CODE_VALIDATION = 11;
+    const ERROR_CODE_EMAIL_ALREADY_TAKEN = 12;
+    const ERROR_CODE_EMAIL_INVALID = 13;
+    const ERROR_CODE_EMAIL_NOT_FOUND = 14;
+    const ERROR_CODE_EMAIL_PASSWORD_MISMATCH = 15;
+
 
     /**
      * @var array List of errors of form [ ['message' => 'message', 'code' => 'number'], ...]
