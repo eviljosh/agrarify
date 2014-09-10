@@ -23,7 +23,7 @@ class MessagesController extends ApiController {
 	 */
 	public function listVeggieMessages()
 	{
-        $messages = Message::fetchVeggieMessagesByAccountForDaysPast($this->getAccount());
+        $messages = Message::fetchVeggieMessagesByAccountForDaysPast($this->getAccount(), 10);
         return $this->sendSuccessResponse($messages);
 	}
 
