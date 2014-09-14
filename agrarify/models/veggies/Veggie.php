@@ -295,11 +295,12 @@ class Veggie extends BaseModel {
             return true;
         }
 
-        $acceptance = $this->getAcceptanceMessage();
-        if ($acceptance and $acceptance->getRecipientAccount()->getId() == $account->getId())
-        {
-            return true;
-        }
+        // disabling full location details for veggies that you do not own until we figure out security implications
+//        $acceptance = $this->getAcceptanceMessage();
+//        if ($acceptance and $acceptance->getRecipientAccount()->getId() == $account->getId())
+//        {
+//            return true;
+//        }
 
         return false;
     }
