@@ -19,7 +19,6 @@ class LocationTransformer extends AgrarifyTransformer
         $json_array = [
             'city'        => $location->getCity(),
             'state'       => $location->getState(),
-            'DEBUG_geohash' => $location->getGeohash(), // TODO: REMOVE
         ];
 
         if (!$this->getOption($options, self::OPTIONS_ROUGH_ONLY))
@@ -30,6 +29,7 @@ class LocationTransformer extends AgrarifyTransformer
                 'postal_code' => $location->getPostalCode(),
                 'latitude'    => $location->getLatitude(),
                 'longitude'   => $location->getLongitude(),
+                'geohash'     => $location->getGeohash(),
             ]);
         }
 

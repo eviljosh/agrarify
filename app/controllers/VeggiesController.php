@@ -267,11 +267,9 @@ class VeggiesController extends ApiController {
 
         $results = [];
         $ids_seen = [];
-        $geohash_substrings = [];
         for ($n = 11; $n > 3; $n--)
         {
             $geohash_substring = substr($geohash, 0, $n) . '%';
-            $geohash_substrings[] = $geohash_substring;
 
             $veggies_query = Veggie::whereHas('location', function($q) use ($geohash_substring)
                 {
@@ -320,7 +318,6 @@ class VeggiesController extends ApiController {
             'search_latitude'  => $lat,
             'search_longitude' => $lon,
             'search_geohash'   => $geohash,
-            'substrings'       => $geohash_substrings,
             'search_type'      => $type,
         ];
 
