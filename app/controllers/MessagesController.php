@@ -51,6 +51,7 @@ class MessagesController extends ApiController {
     /**
      * Create a message associated with the given veggie and account.
      *
+     * @param mixed $id The veggie id
      * @return Response
      */
     public function createVeggieMessage($id)
@@ -108,6 +109,40 @@ class MessagesController extends ApiController {
             });
 
             return $this->sendSuccessResponseCreated($message);
+        }
+        return $this->sendErrorNotFoundResponse();
+    }
+
+    /**
+     * Update the given message
+     *
+     * @param $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        $payload = $this->assertRequestPayloadItem();
+
+        $message = Message::fetchMessageForAccount($this->getAccount(), $id);
+
+        if ($message)
+        {
+            // we don't use fill here because only these two fields are editable at the moment
+
+            if (isset($payload['read_by_recipient']))
+            {
+                $message->setReadByRecipient($payload['read_by_recipient']);
+            }
+
+            if (isset($payload['ignored_by_recipient']))
+            {
+                $message->setIgnoredByRecipient($payload['ignored_by_recipient']);
+            }
+
+            $this->assertValid($message);
+            $message->save();
+
+            return $this->sendSuccessResponse($message);
         }
         return $this->sendErrorNotFoundResponse();
     }

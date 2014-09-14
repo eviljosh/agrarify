@@ -28,7 +28,6 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::put('/accounts/me/locations/{id}', ['as' => 'v1.locations.update', 'uses' => 'LocationsController@update']);
     Route::delete('/accounts/me/locations/{id}', ['as' => 'v1.locations.delete', 'uses' => 'LocationsController@deleteLocation']);
 
-
     Route::get('veggies/messages', ['as' => 'v1.messages.veggiemessageslist', 'uses' => 'MessagesController@listVeggieMessages']);
     Route::get('veggies/{id}/messages', ['as' => 'v1.messages.veggiemessages', 'uses' => 'MessagesController@showVeggieMessages']);
     Route::post('veggies/{id}/messages', ['as' => 'v1.messages.createveggiemessage', 'uses' => 'MessagesController@createVeggieMessage']);
@@ -36,6 +35,8 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::put('veggies/{veggie_id}/images/{image_id}', ['as' => 'v1.veggieimages.update', 'uses' => 'VeggieImagesController@update']);
     Route::delete('veggies/{veggie_id}/images/{image_id}', ['as' => 'v1.veggieimages.destroy', 'uses' => 'VeggieImagesController@destroy']);
     Route::resource('veggies', 'VeggiesController');
+
+    Route::put('messages/{id}', ['as' => 'v1.messages.update', 'uses' => 'MessagesController@update']);
 
 });
 

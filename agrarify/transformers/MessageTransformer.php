@@ -26,25 +26,34 @@ class MessageTransformer extends AgrarifyTransformer
     public function transform($message, $options = [])
     {
         $json_array = [
-            'id' => $message->getId(),
-            'type' => $message->getType(),
-            'from_me' => $this->account->getId() == $message->getAccount()->getId(),
-            'from_profile' => $this->account_profile_transformer->transform(
-                    $message->getAccount()->getProfile(),
-                    [AccountProfileTransformer::OPTIONS_SHOW_SHORT_PROFILE => true]
+            'id'                => $message->getId(),
+            'type'              => $message->getType(),
+            'from_me'           => $this->account->getId() == $message->getAccount()->getId(),
+            'from_profile'      => $this->account_profile_transformer->transform(
+                                $message->getAccount()->getProfile(),
+                                [AccountProfileTransformer::OPTIONS_SHOW_SHORT_PROFILE => true]
                 ),
-            'to_profile' => $this->account_profile_transformer->transform(
-                    $message->getRecipientAccount()->getProfile(),
-                    [AccountProfileTransformer::OPTIONS_SHOW_SHORT_PROFILE => true]
+            'to_profile'        => $this->account_profile_transformer->transform(
+                                $message->getRecipientAccount()->getProfile(),
+                                [AccountProfileTransformer::OPTIONS_SHOW_SHORT_PROFILE => true]
                 ),
-            'message' => $message->getMessage(),
-            'sent_at' => $message->getCreatedAt()->toDateTimeString(),
+            'message'           => $message->getMessage(),
+            'sent_at'           => $message->getCreatedAt()->toDateTimeString(),
+            'read_by_recipient' => $message->isReadByRecipient(),
         ];
 
         if ($message->isVeggieMessage())
         {
             $json_array = array_merge($json_array, [
-                'veggie_id' => $message->getOtherId()
+                'veggie_id'   => $message->getOtherId(),
+                'veggie_type' => $message->getVeggie()->getType(),
+            ]);
+        }
+
+        if ($message->isToAccount($this->account))
+        {
+            $json_array = array_merge($json_array, [
+                'ignored_by_recipient' => $message->isIgnoredByRecipient()
             ]);
         }
 

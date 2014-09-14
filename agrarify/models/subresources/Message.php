@@ -3,6 +3,7 @@
 namespace Agrarify\Models\Subresources;
 
 use Agrarify\Models\BaseModel;
+use Agrarify\Models\Veggies\Veggie;
 use Carbon\Carbon;
 
 class Message extends BaseModel {
@@ -146,6 +147,38 @@ class Message extends BaseModel {
     }
 
     /**
+     * @return bool Indication of whether message has been read by recipient
+     */
+    public function isReadByRecipient()
+    {
+        return (boolean) $this->getParamOrDefault('read_by_recipient');
+    }
+
+    /**
+     * @param bool $read
+     */
+    public function setReadByRecipient($read)
+    {
+        $this->read_by_recipient = $read;
+    }
+
+    /**
+     * @return bool Indication of whether message has been ignored by recipient
+     */
+    public function isIgnoredByRecipient()
+    {
+        return (boolean) $this->getParamOrDefault('ignored_by_recipient');
+    }
+
+    /**
+     * @param bool $ignored
+     */
+    public function setIgnoredByRecipient($ignored)
+    {
+        $this->ignored_by_recipient = $ignored;
+    }
+
+    /**
      * @return \Carbon\Carbon Created at date
      */
     public function getCreatedAt()
@@ -159,6 +192,32 @@ class Message extends BaseModel {
     public function isVeggieMessage()
     {
         return in_array($this->getType(), self::getVeggieMessageTypes());
+    }
+
+    /**
+     * @return \Agrarify\Models\Veggies\Veggie
+     */
+    public function getVeggie()
+    {
+        return Veggie::find($this->getParamOrDefault('other_id'));
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\Account $account
+     * @return bool Indication of whether this message is sent to the account in question
+     */
+    public function isToAccount($account)
+    {
+        return $this->getParamOrDefault('recipient_id') == $account->getId();
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\Account $account
+     * @return bool Indication of whether this message is sent from the account in question
+     */
+    public function isFromAccount($account)
+    {
+        return $this->getParamOrDefault('account_id') == $account->getId();
     }
 
     /**
@@ -199,6 +258,21 @@ class Message extends BaseModel {
             ->where('other_id', '=', $veggie->getId())
             ->orderBy('created_at', 'DESC')
             ->get();
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\Account $account
+     * @param mixed $message_id
+     * @return \Agrarify\Models\Subresources\Message
+     */
+    public static function fetchMessageForAccount($account, $message_id)
+    {
+        $message = Message::find($message_id);
+        if ($message->isFromAccount($account) or $message->isToAccount($account))
+        {
+            return $message;
+        }
+        return null;
     }
 
 }
