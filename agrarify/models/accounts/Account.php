@@ -3,6 +3,7 @@
 namespace Agrarify\Models\Accounts;
 
 use Agrarify\Models\BaseModel;
+use Agrarify\Models\Subresources\ConfirmationToken;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
@@ -130,9 +131,9 @@ class Account extends BaseModel {
     /**
      * Updates verification timestamp to present
      */
-    public function setVerificationTimestampToNow()
+    private function setVerificationTimestampToNow()
     {
-        $this->verification_timestamp = Carbon::now()->getTimestamp();
+        $this->verification_timestamp = new \DateTime;
     }
 
     /**
@@ -190,6 +191,16 @@ class Account extends BaseModel {
     }
 
     /**
+     * Defines the one-to-many relationship with confirmation tokens
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function confirmationTokens()
+    {
+        return $this->hasMany('Agrarify\Models\Subresources\ConfirmationToken');
+    }
+
+    /**
      * Defines the one-to-many relationship with veggies
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -242,6 +253,13 @@ class Account extends BaseModel {
             }
         }
         return $primary_location;
+    }
+
+    public function deleteOutstandingConfirmationTokensOfType($type)
+    {
+        ConfirmationToken::where('account_id', '=', $this->getId())
+            ->where('type', '=', $type)
+            ->delete();
     }
 
     /**

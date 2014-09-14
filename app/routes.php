@@ -9,6 +9,9 @@ Route::get('/', 'HomeController@showBasicStatus');
 Route::post('/v1/oauth_consumer', ['as' => 'v1.oauthconsumers.create', 'uses' => 'OauthController@createConsumer']);
 Route::post('/v1/access_token', ['as' => 'v1.accesstokens.create', 'uses' => 'OauthController@createAccessToken']);
 
+// Confirmation endpoints
+Route::get('email_confirmation/{token}', ['as' => 'confirmation.email', 'uses' => 'ConfirmationTokensController@getConfirmed']);
+
 // Veggie endpoints available without login
 Route::get('/v1/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@listOptions']);
 Route::get('/v1/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']);  // TODO: implement a real search controller once elastic search is up

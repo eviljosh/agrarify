@@ -91,7 +91,12 @@ class AccountsController extends ApiController {
         {
             //TODO: ASYNC laravel even has hooks to queue up emails natively
             //TODO: refactor this into account
-            Mail::send('emails.agrarify.new_account_confirmation', [], function($message) use ($account)
+            $account->deleteOutstandingConfirmationTokensOfType(\Agrarify\Models\Subresources\ConfirmationToken::TYPE_EMAIL_VERIFICATION);
+            $token = new \Agrarify\Models\Subresources\ConfirmationToken();
+            $token->setType(\Agrarify\Models\Subresources\ConfirmationToken::TYPE_EMAIL_VERIFICATION);
+            $token->setAccount($account);
+            $token->save();
+            Mail::send('emails.agrarify.new_account_confirmation', ['token' => $token], function($message) use ($account)
             {
                 $message->from(Config::get('agrarify.support_address'), Config::get('agrarify.app_name'));
                 $message->to($account->getEmailAddress());

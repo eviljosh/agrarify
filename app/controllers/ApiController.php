@@ -173,6 +173,7 @@ class ApiController extends BaseController {
             foreach ($e->getValidationErrors() as $field_name => $errors)
             {
                 $error_code = ApiErrorException::ERROR_CODE_VALIDATION;
+
                 if ($model instanceof \Agrarify\Models\Accounts\Account)
                 {
                     if ($errors[0] == 'The email address has already been taken.')
