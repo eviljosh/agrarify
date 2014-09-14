@@ -238,6 +238,14 @@ class Account extends BaseModel {
     }
 
     /**
+     * @return bool Indication of whether account password is set or not
+     */
+    public function hasPassword()
+    {
+        return !empty($this->getParamOrDefault('password'));
+    }
+
+    /**
      * Returns primary location or, if none exists, some location associated with the account.
      *
      * @return \Agrarify\Models\Subresources\Location

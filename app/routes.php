@@ -12,6 +12,9 @@ Route::post('/v1/access_token', ['as' => 'v1.accesstokens.create', 'uses' => 'Oa
 // Confirmation endpoints
 Route::get('email_confirmation/{token}', ['as' => 'confirmation.email', 'uses' => 'ConfirmationTokensController@getConfirmed']);
 
+// Forgotten password endpoint
+Route::post('v1/forgotten_password', ['as' => 'v1.accounts.forgottenpassword', 'uses' => 'AccountsController@forgottenPassword']);
+
 // Veggie endpoints available without login
 Route::get('/v1/veggies/options', ['as' => 'v1.veggies.optionslist', 'uses' => 'VeggiesController@listOptions']);
 Route::get('/v1/search/test/veggies', ['as' => 'v1.veggies.testsearch', 'uses' => 'VeggiesController@testSearch']);  // TODO: implement a real search controller once elastic search is up

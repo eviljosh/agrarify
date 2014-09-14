@@ -63,7 +63,11 @@ class AccountsController extends ApiController {
         // Handle password updates separately since they must be hashed.
         if (isset($payload['password']) and strlen($payload['password']) > 0)
         {
-            $account->hashAndSetPassword($payload['password']);
+            if ((isset($payload['existing_password']) and $account->isPasswordValid($payload['existing_password']))
+                or !$account->hasPassword())
+            {
+                $account->hashAndSetPassword($payload['password']);
+            }
         }
 
         // Validate the account instance
@@ -123,5 +127,33 @@ class AccountsController extends ApiController {
 		// TODO: implement, once we know what will need to be done upon account deletion
         return $this->sendErrorNotImplementedResponse();
 	}
+
+    /**
+     * HTTP POST to forgotten_password
+     * Allows users to reset their password
+     *
+     * @return Response
+     */
+    public function forgottenPassword()
+    {
+        $payload = $this->assertRequestPayloadItem();
+        $account = Account::fetchByEmail($payload['email_address']);
+        if ($account)
+        {
+            $new_password = str_random(8);
+            $account->hashAndSetPassword($new_password);
+            $account->save();
+
+            Mail::send('emails.agrarify.password_reset', ['password' => $new_password], function($message) use ($account)
+            {
+                $message->from(Config::get('agrarify.support_address'), Config::get('agrarify.app_name'));
+                $message->to($account->getEmailAddress());
+                $message->subject('Your ' . Config::get('agrarify.app_name') . ' password has been reset');
+            });
+            
+            return Response::make('');
+        }
+        return $this->sendErrorNotFoundResponse();
+    }
 
 }
