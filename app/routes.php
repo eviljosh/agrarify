@@ -28,6 +28,12 @@ Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth'], function () {
     Route::put('/accounts/me/profile', ['as' => 'v1.accountprofiles.updateforaccount', 'uses' => 'AccountProfilesController@updateForAccount']);
     Route::get('/profiles/{slug}', ['as' => 'v1.accountprofiles.show', 'uses' => 'AccountProfilesController@show']);
 
+    Route::get('/accounts/me/push_registrations', ['as' => 'v1.pushregistrations.index', 'uses' => 'PushRegistrationsController@index']);
+    Route::get('/accounts/me/push_registrations/{id}', ['as' => 'v1.pushregistrations.show', 'uses' => 'PushRegistrationsController@show']);
+    Route::post('/accounts/me/push_registrations', ['as' => 'v1.pushregistrations.create', 'uses' => 'PushRegistrationsController@create']);
+    Route::put('/accounts/me/push_registrations/{id}', ['as' => 'v1.pushregistrations.update', 'uses' => 'PushRegistrationsController@update']);
+    Route::delete('/accounts/me/push_registrations/{id}', ['as' => 'v1.pushregistrations.delete', 'uses' => 'PushRegistrationsController@destroy']);
+
     Route::get('/accounts/me/locations', ['as' => 'v1.locations.list', 'uses' => 'LocationsController@listLocations']);
     Route::get('/accounts/me/locations/{id}', ['as' => 'v1.locations.show', 'uses' => 'LocationsController@show']);
     Route::post('/accounts/me/locations', ['as' => 'v1.locations.create', 'uses' => 'LocationsController@create']);

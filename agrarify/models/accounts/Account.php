@@ -46,6 +46,66 @@ class Account extends BaseModel {
     ];
 
     /**
+     * Defines the one-to-many relationship with oauth access tokens
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function oauthAccessTokens()
+    {
+        return $this->hasMany('Agrarify\Models\Oauth2\OauthAccessToken');
+    }
+
+    /**
+     * Defines the one-to-many relationship with locations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locations()
+    {
+        return $this->hasMany('Agrarify\Models\Subresources\Location');
+    }
+
+    /**
+     * Defines the one-to-many relationship with confirmation tokens
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function confirmationTokens()
+    {
+        return $this->hasMany('Agrarify\Models\Subresources\ConfirmationToken');
+    }
+
+    /**
+     * Defines the one-to-many relationship with veggies
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function veggies()
+    {
+        return $this->hasMany('Agrarify\Models\Veggies\Veggie');
+    }
+
+    /**
+     * Defines the one-to-one relationship with account profiles
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function profile()
+    {
+        return $this->hasOne('Agrarify\Models\Accounts\AccountProfile');
+    }
+
+    /**
+     * Defines the one-to-many relationship with push registrations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pushRegistrations()
+    {
+        return $this->hasMany('Agrarify\Models\Accounts\PushRegistration');
+    }
+
+    /**
      * @return mixed The database id for the record
      */
     public function getId()
@@ -171,53 +231,20 @@ class Account extends BaseModel {
     }
 
     /**
-     * Defines the one-to-many relationship with oauth access tokens
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function oauthAccessTokens()
+    public function getPushRegistrations()
     {
-        return $this->hasMany('Agrarify\Models\Oauth2\OauthAccessToken');
+        return $this->pushRegistrations();
     }
 
     /**
-     * Defines the one-to-many relationship with locations
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param int $id Id of the push registration
+     * @return \Agrarify\Models\Accounts\PushRegistration
      */
-    public function locations()
+    public function getPushRegistrationById($id)
     {
-        return $this->hasMany('Agrarify\Models\Subresources\Location');
-    }
-
-    /**
-     * Defines the one-to-many relationship with confirmation tokens
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function confirmationTokens()
-    {
-        return $this->hasMany('Agrarify\Models\Subresources\ConfirmationToken');
-    }
-
-    /**
-     * Defines the one-to-many relationship with veggies
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function veggies()
-    {
-        return $this->hasMany('Agrarify\Models\Veggies\Veggie');
-    }
-
-    /**
-     * Defines the one-to-one relationship with account profiles
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function profile()
-    {
-        return $this->hasOne('Agrarify\Models\Accounts\AccountProfile');
+        return $this->pushRegistrations()->where('id', '=', $id)->first();
     }
 
     /**

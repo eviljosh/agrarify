@@ -15,10 +15,10 @@ class VeggieAvailabilityTransformer extends AgrarifyTransformer
     public function transform($availability, $options = [])
     {
         return [
-            'type'       => $availability->getType(),
+            'type'              => $availability->getType(),
             'availability_date' => $availability->getAvailabilityDate(),
-            'start_hour' => $availability->getStartHour(),
-            'end_hour'   => $availability->getEndHour(),
+            'start_hour'        => $availability->getStartHour(),
+            'end_hour'          => $availability->getEndHour(),
         ];
     }
 
