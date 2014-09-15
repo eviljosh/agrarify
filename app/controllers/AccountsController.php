@@ -150,7 +150,7 @@ class AccountsController extends ApiController {
                 $message->to($account->getEmailAddress());
                 $message->subject('Your ' . Config::get('agrarify.app_name') . ' password has been reset');
             });
-            
+
             return Response::make('');
         }
         return $this->sendErrorNotFoundResponse();

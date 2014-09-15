@@ -31,7 +31,7 @@ class Veggie extends BaseModel {
         'type'            => 'required|numeric',
         'freshness'       => 'required|numeric',
         'quantity'        => 'required|numeric',
-        'notes'           => 'required'
+        'notes'           => ''
     ];
 
     /**
@@ -46,6 +46,17 @@ class Veggie extends BaseModel {
         'quantity',
         'notes',
     ];
+
+    /**
+     * Create a new Veggie model instance.
+     *
+     * @param array $attributes
+     */
+    function __construct(array $attributes = array())
+    {
+        $this->setStatus(self::STATUS_AVAILABLE);
+        parent::__construct($attributes);
+    }
 
     /**
      * Re-index for searching after saving.

@@ -137,16 +137,6 @@ class VeggiesController extends ApiController {
             $veggie->setAvailability($availability);
         }
 
-        // Set defaults
-        if (!$veggie->getStatus())
-        {
-            $veggie->setStatus(Veggie::STATUS_AVAILABLE);
-        }
-        if (!$veggie->getNotes())
-        {
-            $veggie->setNotes('');
-        }
-
         // Validate and save
         $this->assertValid($veggie);
         $veggie->save();
