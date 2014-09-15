@@ -1,8 +1,8 @@
 <?php
 
-use Agrarify\Models\Subresources\Availability;
 use Agrarify\Models\Subresources\Location;
 use Agrarify\Models\Veggies\Veggie;
+use Agrarify\Models\Veggies\VeggieAvailability;
 use Agrarify\Models\Veggies\VeggieOptions;
 use Agrarify\Transformers\VeggieTransformer;
 use Carbon\Carbon;
@@ -127,19 +127,22 @@ class VeggiesController extends ApiController {
             return $this->sendErrorResponse(['message' => 'Location is required']);
         }
 
-        // Handle availability
-        if (isset($payload['availability']))
-        {
-            $availability_payload = $payload['availability'];
-            $availability = new Availability($availability_payload);
-            $this->assertValid($availability);
-            $availability->save();
-            $veggie->setAvailability($availability);
-        }
-
         // Validate and save
         $this->assertValid($veggie);
         $veggie->save();
+
+        // Handle availability
+        if (isset($payload['availabilities']))
+        {
+            foreach ($payload['availabilities'] as $availability_payload)
+            {
+                $availability = new VeggieAvailability($availability_payload);
+                $availability->setVeggie($veggie);
+                $this->assertValid($availability);
+                $availability->save();
+            }
+        }
+
         return $this->sendSuccessResponseCreated($veggie, [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true]);
     }
 
@@ -195,23 +198,16 @@ class VeggiesController extends ApiController {
             }
 
             // Handle availability
-            if (isset($payload['availability']))
+            if (isset($payload['availabilities']) and !empty($payload['availabilities']))
             {
-                $availability_payload = $payload['availability'];
-
-                $availability = $veggie->getAvailability();
-                if ($availability)
+                $veggie->deleteAvailabilities();
+                foreach ($payload['availabilities'] as $availability_payload)
                 {
-                    $availability->fill($availability_payload);
+                    $availability = new VeggieAvailability($availability_payload);
+                    $availability->setVeggie($veggie);
+                    $this->assertValid($availability);
+                    $availability->save();
                 }
-                else
-                {
-                    $availability = new Availability($availability_payload);
-                }
-
-                $this->assertValid($availability);
-                $availability->save();
-                $veggie->setAvailability($availability);
             }
 
             // Validate and save

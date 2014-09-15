@@ -4,6 +4,7 @@ namespace Agrarify\Models\Veggies;
 
 use Agrarify\Models\BaseModel;
 use Agrarify\Models\Subresources\Message;
+use Agrarify\Models\Veggies\VeggieAvailability;
 use Carbon\Carbon;
 
 class Veggie extends BaseModel {
@@ -26,7 +27,6 @@ class Veggie extends BaseModel {
     public static $rules = [
         'account_id'      => 'required|numeric',
         'location_id'     => 'required|numeric',
-        'availability_id' => 'numeric',
         'status'          => 'required|numeric',
         'type'            => 'required|numeric',
         'freshness'       => 'required|numeric',
@@ -74,18 +74,13 @@ class Veggie extends BaseModel {
     }
 
     /**
-     * Delete availability record prior to deleting the model from the database.
+     * Delete message records prior to deleting the model from the database.
      *
      * @return bool|null
      * @throws \Exception
      */
     public function delete()
     {
-        if ($this->getAvailability())
-        {
-            $this->getAvailability()->delete();  // TODO: ASYNC
-        }
-
         $messages = $this->getMessages();
         foreach ($messages as $message)
         {
@@ -116,13 +111,13 @@ class Veggie extends BaseModel {
     }
 
     /**
-     * Defines the many-to-one relationship with availabilities
+     * Defines the one-to-many relationship with veggie availabilities
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function availability()
+    public function availabilities()
     {
-        return $this->belongsTo('Agrarify\Models\Subresources\Availability');
+        return $this->hasMany('Agrarify\Models\Veggies\VeggieAvailability')->orderBy('availability_date', 'asc');
     }
 
     /**
@@ -184,19 +179,19 @@ class Veggie extends BaseModel {
     }
 
     /**
-     * @return \Agrarify\Models\Subresources\Availability
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAvailability()
+    public function getAvailabilities()
     {
-        return $this->availability;
+        return $this->availabilities;
     }
 
     /**
-     * @param \Agrarify\Models\Subresources\Availability $availability
+     * Deletes existing availabilities associated with this veggie
      */
-    public function setAvailability($availability)
+    public function deleteAvailabilities()
     {
-        $this->availability_id = $availability->getId();
+        VeggieAvailability::where('veggie_id', '=', $this->getId())->delete();
     }
 
     /**

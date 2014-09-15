@@ -11,7 +11,7 @@ class VeggieTransformer extends AgrarifyTransformer
      */
     public function __construct()
     {
-        $this->availability_transformer = new AvailabilityTransformer();
+        $this->availability_transformer = new VeggieAvailabilityTransformer();
         $this->image_transformer = new VeggieImageTransformer();
         $this->location_transformer = new LocationTransformer();
         $this->profile_transformer = new AccountProfileTransformer();
@@ -39,20 +39,20 @@ class VeggieTransformer extends AgrarifyTransformer
             );
         }
 
-        $availability = $veggie->getAvailability();
+        $availabilities = $veggie->getAvailabilities();
 
         $json_array = [
-            'id'            => $veggie->getId(),
-            'status'        => $veggie->getStatus(),
-            'type'          => $veggie->getType(),
-            'freshness'     => $veggie->getFreshness(),
-            'quantity'      => $veggie->getQuantity(),
-            'notes'         => $veggie->getNotes(),
-            'created_at'    => $veggie->getCreatedAt()->toDateTimeString(),
-            'images'        => $this->image_transformer->transformCollection($veggie->getImages()),
-            'owner_profile' => $this->profile_transformer->transform($veggie->getAccount()->getProfile()),
-            'location'      => $location_array,
-            'availability'  => $availability ? $this->availability_transformer->transform($availability) : null,
+            'id'              => $veggie->getId(),
+            'status'          => $veggie->getStatus(),
+            'type'            => $veggie->getType(),
+            'freshness'       => $veggie->getFreshness(),
+            'quantity'        => $veggie->getQuantity(),
+            'notes'           => $veggie->getNotes(),
+            'created_at'      => $veggie->getCreatedAt()->toDateTimeString(),
+            'images'          => $this->image_transformer->transformCollection($veggie->getImages()),
+            'owner_profile'   => $this->profile_transformer->transform($veggie->getAccount()->getProfile()),
+            'location'        => $location_array,
+            'availabilities'  => $availabilities ? $this->availability_transformer->transformCollection($availabilities) : null,
         ];
 
         // TODO: remove this once temporary test search functionality is no longer in use

@@ -76,7 +76,7 @@ class VeggieImage extends BaseModel {
      */
     public function getVeggie()
     {
-        return $this->account;
+        return $this->veggie;
     }
 
     /**
