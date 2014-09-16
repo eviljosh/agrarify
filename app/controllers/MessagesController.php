@@ -72,6 +72,11 @@ class MessagesController extends ApiController {
             // Make sure message type is acceptable
             if ($message->getType() == Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
             {
+                if ($veggie->getStatus() == Veggie::STATUS_CLAIMED)
+                {
+                    return $this->sendErrorResponse(['message' => 'This veggie has already been claimed.']);
+                }
+
                 if ($veggie->getAccount()->getId() == $this->getAccount()->getId())
                 {
                     $veggie->setStatus(Veggie::STATUS_CLAIMED);
@@ -80,6 +85,10 @@ class MessagesController extends ApiController {
                 {
                     return $this->sendErrorResponse(['message' => 'Only the veggie owner can accept an offer']);
                 }
+            }
+            elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER and $veggie->getStatus() == Veggie::STATUS_CLAIMED)
+            {
+                return $this->sendErrorResponse(['message' => 'This veggie has already been claimed.']);
             }
 
             // Handle recipient profile
