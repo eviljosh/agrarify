@@ -76,6 +76,34 @@ Route::filter('agrarify.api.auth', function()
 
 });
 
+Route::filter('agrarify.api.auth_optional', function()
+{
+    $authorization = Request::header('Authorization');
+
+    if ($authorization)
+    {
+        $auth_parts = explode(' ', $authorization);
+
+        if (sizeof($auth_parts) == 2)
+        {
+            $auth_type = $auth_parts[0];
+            $auth_token = $auth_parts[1];
+
+            if ($auth_type == 'Bearer')
+            {
+                $token = OauthAccessToken::fetchByToken($auth_token);
+
+                if ($token)
+                {
+                    $account = $token->account;
+                    Session::put('account', $account);
+                    Session::put('access_token', $token);
+                }
+            }
+        }
+    }
+});
+
 /*
 |--------------------------------------------------------------------------
 | Laravel Default Authentication Filters

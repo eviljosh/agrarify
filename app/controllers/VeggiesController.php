@@ -245,6 +245,7 @@ class VeggiesController extends ApiController {
         $lat = Input::get('latitude', '37.77492950');
         $lon = Input::get('longitude', '-122.4194155');
         $type = Input::get('type', null);
+        $account = $this->getAccount();
 
         $coord = new Coordinate($lat . ', ' . $lon);
         $geotool = new Geotools();
@@ -263,6 +264,7 @@ class VeggiesController extends ApiController {
                 })
                 ->where('created_at', '>', Carbon::now()->subDays(7)->toDateTimeString())
                 ->where('status', '=', Veggie::STATUS_AVAILABLE);
+
             if ($type)
             {
                 if (is_array($type))
@@ -274,6 +276,12 @@ class VeggiesController extends ApiController {
                     $veggies_query = $veggies_query->where('type', '=', $type);
                 }
             }
+
+            if ($account)
+            {
+                $veggies_query = $veggies_query->where('account_id', '!=', $account->getId());
+            }
+
             $veggies = $veggies_query->get();
 
             foreach ($veggies as $veggie)
@@ -305,6 +313,7 @@ class VeggiesController extends ApiController {
             'search_longitude' => $lon,
             'search_geohash'   => $geohash,
             'search_type'      => $type,
+            'account'          => $account ? $account->getEmailAddress() : 'none',
         ];
 
         return $this->sendSuccessResponse($results, [], $metadata);
