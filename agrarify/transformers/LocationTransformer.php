@@ -19,6 +19,11 @@ class LocationTransformer extends AgrarifyTransformer
         $json_array = [
             'city'        => $location->getCity(),
             'state'       => $location->getState(),
+
+
+            'latitude'    => $location->getLatitude(),
+            'longitude'   => $location->getLongitude(),
+            'geohash'     => $location->getGeohash(),
         ];
 
         if (!$this->getOption($options, self::OPTIONS_ROUGH_ONLY))

@@ -313,7 +313,7 @@ class VeggiesController extends ApiController {
             'search_longitude' => $lon,
             'search_geohash'   => $geohash,
             'search_type'      => $type,
-            'account'          => $account ? $account->getEmailAddress() : 'none',
+            'account'          => $account ? $account->getEmailAddress() : null,
         ];
 
         return $this->sendSuccessResponse($results, [], $metadata);
