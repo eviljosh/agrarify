@@ -37,7 +37,7 @@ class PushRegistrationsController extends ApiController {
 
         if ($push_registration)
         {
-            $this->sendSuccessResponse($push_registration);
+            return $this->sendSuccessResponse($push_registration);
         }
         return $this->sendErrorNotFoundResponse();
     }

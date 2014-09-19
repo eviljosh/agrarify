@@ -235,7 +235,7 @@ class Account extends BaseModel {
      */
     public function getPushRegistrations()
     {
-        return $this->pushRegistrations();
+        return $this->pushRegistrations;
     }
 
     /**
