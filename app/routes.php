@@ -15,6 +15,9 @@ Route::get('/email_confirmation/{token}', ['as' => 'confirmation.email', 'uses' 
 // Forgotten password endpoint
 Route::post('/v1/forgotten_password', ['as' => 'v1.accounts.forgottenpassword', 'uses' => 'AccountsController@forgottenPassword']);
 
+// Push message test endpoint
+Route::get('/v1/push_message_test/{id}', ['as' => 'v1.pushmessagetest', 'uses' => 'PushRegistrationsController@test']);
+
 
 // API v1 Resource Endpoints that do not require authorization
 Route::group(['prefix' => 'v1', 'before' => 'agrarify.api.auth_optional'], function () {

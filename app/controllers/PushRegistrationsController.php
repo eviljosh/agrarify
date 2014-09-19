@@ -3,6 +3,8 @@
 use Agrarify\Lib\PushNotificationAdapter;
 use Agrarify\Models\Accounts\PushRegistration;
 use Agrarify\Transformers\PushRegistrationTransformer;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 
 class PushRegistrationsController extends ApiController {
@@ -102,6 +104,24 @@ class PushRegistrationsController extends ApiController {
         {
             $push_registration->delete();
             return $this->sendSuccessNoContentResponse();
+        }
+        return $this->sendErrorNotFoundResponse();
+    }
+
+    public function test($id)
+    {
+        $push_registration = PushRegistration::find($id);
+
+        if ($push_registration)
+        {
+            $message = 'Test message sent by ' . Config::get('agrarify.app_name') . ' at ' . Carbon::now()->toDateTimeString() . ' to token ' . $push_registration->getToken();
+            try {
+                $push_registration->sendMessage($message);
+                return Response::make('attempted to push message: ' . $message);
+            }
+            catch (\Exception $e) {
+                return Response::make('got an exception from AWS SNS: ' . $e->getMessage());
+            }
         }
         return $this->sendErrorNotFoundResponse();
     }
