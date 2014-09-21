@@ -3,6 +3,7 @@
 use Agrarify\Models\Accounts\AccountProfile;
 use Agrarify\Models\Subresources\Message;
 use Agrarify\Models\Veggies\Veggie;
+use Agrarify\Models\Veggies\VeggieOptions;
 use Agrarify\Transformers\MessageTransformer;
 use Illuminate\Support\Facades\Response;
 
@@ -116,6 +117,18 @@ class MessagesController extends ApiController {
                 $message->save();
                 $veggie->save();
             });
+
+            $veggie_name = VeggieOptions::getVeggieNameForCode($veggie->getType());
+            $push_message = 'You have a new message about the ' . $veggie_name . '!';
+            if ($message->getType() == Message::TYPE_VEGGIE_OFFER)
+            {
+                $push_message = 'You have a new offer on your ' . $veggie_name . '!';
+            }
+            elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
+            {
+                $push_message = 'Your offer on the ' . $veggie_name . ' has been accepted!';
+            }
+            $message->getRecipientAccount()->sendPushNotification($push_message);
 
             return $this->sendSuccessResponseCreated($message);
         }

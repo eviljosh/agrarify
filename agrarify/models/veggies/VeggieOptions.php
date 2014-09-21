@@ -71,4 +71,9 @@ class VeggieOptions {
         ];
     }
 
+    public static function getVeggieNameForCode($code)
+    {
+        return self::getOptions()[$code - 1][1];
+    }
+
 }

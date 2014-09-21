@@ -297,6 +297,14 @@ class Account extends BaseModel {
             ->delete();
     }
 
+    public function sendPushNotification($message)
+    {
+        foreach ($this->getPushRegistrations() as $registration)
+        {
+            $registration->sendMessage($message);
+        }
+    }
+
     /**
      * @param $email_address
      * @return Account
