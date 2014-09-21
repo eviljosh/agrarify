@@ -30,6 +30,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
     'local' => array('badger'),
     'development' => array('solitary-shelter'),
+    'beta' => array('zealous-atoll'),
 ));
 
 /*
