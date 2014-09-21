@@ -39,6 +39,17 @@ class PushRegistration extends BaseModel {
     ];
 
     /**
+     * Create a new PushRegistration model instance.
+     *
+     * @param array $attributes
+     */
+    function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+        $this->enabled = true;
+    }
+
+    /**
      * Overrides the base delete in order to delete the record on the AWS SNS side
      *
      * @return bool|null
