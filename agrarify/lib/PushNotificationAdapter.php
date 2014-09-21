@@ -82,7 +82,7 @@ class PushNotificationAdapter {
      * @param \Agrarify\Models\Accounts\PushRegistration $push_registration
      * @param string $message
      */
-    public static function sendMessage($push_registration, $message)
+    public static function sendMessage($push_registration, $message, $attempt = 0)
     {
         $sns_client = self::getSnsClient();
 
@@ -95,6 +95,19 @@ class PushNotificationAdapter {
         catch (\Aws\Sns\Exception\EndpointDisabledException $e) {
             $push_registration->setEnabled(false);
             $push_registration->save();
+        }
+        catch (\Aws\Sns\Exception\InvalidParameterException $e) {
+            if (($attempt < 3) and (strpos($e->getMessage(), 'No endpoint found for the target arn specified') !== false)) {
+                $arn = self::registerDevice($push_registration);
+                $push_registration->setEnabled(true);
+                $push_registration->setSnsArn($arn);
+                $push_registration->save();
+
+                self::sendMessage($push_registration, $message, $attempt + 1);
+            }
+            else {
+                throw $e;
+            }
         }
     }
 
