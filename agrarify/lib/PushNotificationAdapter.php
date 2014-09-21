@@ -41,7 +41,7 @@ class PushNotificationAdapter {
         $result = $sns_client->createPlatformEndpoint([
             'PlatformApplicationArn' => self::getApplicationArnForType($push_registration->getType()),
             'Token' => $push_registration->getToken(),
-            'CustomUserData' => Config::get('agrarify.app_name') . ' ' . $push_registration->getAccount()->getId(),
+            'CustomUserData' => Config::get('agrarify.app_name') . ' ' . $push_registration->getAccount()->getId() . ' ' . $push_registration->getAccount()->getEmailAddress(),
             'Enabled' => 'true',
             'Attributes' => [
                 'Enabled' => 'true',
@@ -53,16 +53,49 @@ class PushNotificationAdapter {
 
     /**
      * @param \Agrarify\Models\Accounts\PushRegistration $push_registration
+     */
+    public static function deleteDeviceEndpoint($push_registration)
+    {
+        $sns_client = self::getSnsClient();
+
+        $result = $sns_client->deleteEndpoint([
+            'EndpointArn' => $push_registration->getSnsArn()
+        ]);
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\PushRegistration $push_registration
+     */
+    public static function enableDeviceEndpoint($push_registration)
+    {
+        $sns_client = self::getSnsClient();
+
+        $result = $sns_client->setEndpointAttributes([
+            'EndpointArn' => $push_registration->getSnsArn(),
+            'Attributes' => [
+                'Enabled' => 'true',
+            ],
+        ]);
+    }
+
+    /**
+     * @param \Agrarify\Models\Accounts\PushRegistration $push_registration
      * @param string $message
      */
     public static function sendMessage($push_registration, $message)
     {
         $sns_client = self::getSnsClient();
 
-        $sns_client->publish([
-            'Message' => Config::get('agrarify.app_name') . ': ' . $message,
-            'TargetArn' => $push_registration->getSnsArn(),
-        ]);
+        try {
+            $sns_client->publish([
+                'Message' => Config::get('agrarify.app_name') . ': ' . $message,
+                'TargetArn' => $push_registration->getSnsArn(),
+            ]);
+        }
+        catch (\Aws\Sns\Exception\EndpointDisabledException $e) {
+            $push_registration->setEnabled(false);
+            $push_registration->save();
+        }
     }
 
 }

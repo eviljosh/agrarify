@@ -39,6 +39,18 @@ class PushRegistration extends BaseModel {
     ];
 
     /**
+     * Overrides the base delete in order to delete the record on the AWS SNS side
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        PushNotificationAdapter::deleteDeviceEndpoint($this);
+        return parent::delete();
+    }
+
+    /**
      * Defines the one-to-one relationship with accounts
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -113,13 +125,32 @@ class PushRegistration extends BaseModel {
     }
 
     /**
+     * @return bool Indication of whether endpoint is enabled or not
+     */
+    public function isEnabled()
+    {
+        return (bool) $this->getParamOrDefault('enabled');
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
      * Send a push notification message to this registered device
      *
      * @param string $message
      */
     public function sendMessage($message)
     {
-        PushNotificationAdapter::sendMessage($this, $message);
+        if ($this->isEnabled())
+        {
+            PushNotificationAdapter::sendMessage($this, $message);
+        }
     }
 
 }

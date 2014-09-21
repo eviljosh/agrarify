@@ -114,13 +114,17 @@ class PushRegistrationsController extends ApiController {
 
         if ($push_registration)
         {
-            $message = 'Test message sent by ' . Config::get('agrarify.app_name') . ' at ' . Carbon::now()->toDateTimeString() . ' to token ' . $push_registration->getToken();
-            try {
-                $push_registration->sendMessage($message);
-                return Response::make('attempted to push message: ' . $message);
+            if ($push_registration->isEnabled()) {
+                $message = 'Test message sent by ' . Config::get('agrarify.app_name') . ' at ' . Carbon::now()->toDateTimeString() . ' to token ' . $push_registration->getToken();
+                try {
+                    $push_registration->sendMessage($message);
+                    return Response::make('attempted to push message: ' . $message);
+                } catch (\Exception $e) {
+                    return Response::make('got an exception from AWS SNS: ' . $e->getMessage());
+                }
             }
-            catch (\Exception $e) {
-                return Response::make('got an exception from AWS SNS: ' . $e->getMessage());
+            else {
+                return Response::make('This push registration is disabled. This normally happens because AWS SNS tells us that GCM believes the push id we are targeting is invalid.  Please delete this record and create a new one.');
             }
         }
         return $this->sendErrorNotFoundResponse();
