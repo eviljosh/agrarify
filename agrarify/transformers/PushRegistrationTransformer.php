@@ -19,6 +19,7 @@ class PushRegistrationTransformer extends AgrarifyTransformer
             'type'        => $push_registration->getType(),
             'token'       => $push_registration->getToken(),
             'device_name' => $push_registration->getDeviceName(),
+            'enabled'     => $push_registration->isEnabled(),
         ];
     }
 
