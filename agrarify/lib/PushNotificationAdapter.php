@@ -88,7 +88,7 @@ class PushNotificationAdapter {
 
         try {
             $sns_client->publish([
-                'Message' => Config::get('agrarify.app_name') . ': ' . $message,
+                'Message' => $message,
                 'TargetArn' => $push_registration->getSnsArn(),
             ]);
         }
