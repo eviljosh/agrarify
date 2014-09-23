@@ -129,11 +129,11 @@ class MessagesController extends ApiController {
             $push_message = $message_text;
             if ($message->getType() == Message::TYPE_VEGGIE_OFFER)
             {
-                $push_message = 'Someone wants your ' . $veggie_name . '!' . "\n" . $message_text;
+                $push_message = 'Someone wants your ' . $veggie_name . '!  ' . $message_text;
             }
             elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
             {
-                $push_message = 'You\'ve got . ' . $veggie_name . '!' . "\n" . $message_text;
+                $push_message = 'You\'ve got . ' . $veggie_name . '!  ' . $message_text;
             }
             $message->getRecipientAccount()->sendPushNotification($push_message);
 
