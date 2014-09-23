@@ -119,14 +119,21 @@ class MessagesController extends ApiController {
             });
 
             $veggie_name = VeggieOptions::getVeggieNameForCode($veggie->getType());
-            $push_message = 'You have a new message about the ' . $veggie_name . '!';
+            $message_text = '';
+            if ($message->getMessage())
+            {
+                $message_text = $this->getAccount()->getProfile()->getDisplayName() . ' says: ';
+                $message_text .= str_limit($message->getMessage(), $limit = 50, $end = '...');
+            }
+
+            $push_message = $message_text;
             if ($message->getType() == Message::TYPE_VEGGIE_OFFER)
             {
-                $push_message = 'You have a new offer on your ' . $veggie_name . '!';
+                $push_message = 'Someone wants your ' . $veggie_name . '!' . "\n" . $message_text;
             }
             elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
             {
-                $push_message = 'Your offer on the ' . $veggie_name . ' has been accepted!';
+                $push_message = 'You\'ve got . ' . $veggie_name . '!' . "\n" . $message_text;
             }
             $message->getRecipientAccount()->sendPushNotification($push_message);
 
