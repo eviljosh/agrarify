@@ -81,21 +81,22 @@ class PushNotificationAdapter {
     /**
      * @param \Agrarify\Models\Accounts\PushRegistration $push_registration
      * @param string $message
-     * @param string $format
      * @param int $attempt
      */
-    public static function sendMessage($push_registration, $message, $format = null, $attempt = 0)
+    public static function sendMessage($push_registration, $message, $attempt = 0)
     {
         $sns_client = self::getSnsClient();
 
-        $publication_array = [
-            'TargetArn' => $push_registration->getSnsArn(),
-            'Message' => $message,
-        ];
-        if ($format) {
-            $publication_array['MessageStructure'] = $format;
+        $publication_array = ['TargetArn' => $push_registration->getSnsArn()];
+        if (is_array($message))
+        {
+            $publication_array['Message'] = json_encode($message);
+            $publication_array['MessageStructure'] = 'json';
         }
-
+        else
+        {
+            $publication_array['Message'] = $message;
+        }
 
         try {
             $sns_client->publish($publication_array);
@@ -111,7 +112,7 @@ class PushNotificationAdapter {
                 $push_registration->setSnsArn($arn);
                 $push_registration->save();
 
-                self::sendMessage($push_registration, $message, $format, $attempt + 1);
+                self::sendMessage($push_registration, $message, $attempt + 1);
             }
             else {
                 throw $e;
