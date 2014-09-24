@@ -164,4 +164,28 @@ class PushRegistration extends BaseModel {
         }
     }
 
+    /**
+     * Send a complex push notification message to this registered device
+     *
+     * @param string $title
+     * @param string $message
+     */
+    public function sendFormattedMessage($title, $message)
+    {
+        if ($this->isEnabled())
+        {
+            $message = [
+                'GCM' => [
+                    'data' => [
+                        'title' => $title,
+                        'message' => $message
+                    ]
+                ]
+            ];
+            $message = json_encode($message);
+
+            PushNotificationAdapter::sendMessage($this, $message, 'json');
+        }
+    }
+
 }

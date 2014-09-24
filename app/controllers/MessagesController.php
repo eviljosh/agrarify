@@ -122,20 +122,20 @@ class MessagesController extends ApiController {
             $message_text = '';
             if ($message->getMessage())
             {
-                $message_text = $this->getAccount()->getProfile()->getDisplayName() . ' says: ';
-                $message_text .= str_limit($message->getMessage(), $limit = 50, $end = '...');
+                $message_text = $this->getAccount()->getProfile()->getDisplayName() . ': ';
+                $message_text .= str_limit($message->getMessage(), $limit = 100, $end = '...');
             }
 
-            $push_message = $message_text;
+            $push_title = 'New Message';
             if ($message->getType() == Message::TYPE_VEGGIE_OFFER)
             {
-                $push_message = 'Someone wants your ' . $veggie_name . '!  ' . $message_text;
+                $push_title = $veggie_name . ' request!';
             }
             elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER_ACCEPTANCE)
             {
-                $push_message = 'You\'ve got . ' . $veggie_name . '!  ' . $message_text;
+                $push_title = 'You got . ' . $veggie_name . '!';
             }
-            $message->getRecipientAccount()->sendPushNotification($push_message);
+            $message->getRecipientAccount()->sendFormattedPushNotification($push_title, $message_text);
 
             return $this->sendSuccessResponseCreated($message);
         }

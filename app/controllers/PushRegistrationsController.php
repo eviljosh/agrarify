@@ -117,7 +117,7 @@ class PushRegistrationsController extends ApiController {
             if ($push_registration->isEnabled()) {
                 $message = 'Test message sent by ' . Config::get('agrarify.app_name') . ' at ' . Carbon::now()->toDateTimeString() . ' to token ' . $push_registration->getToken();
                 try {
-                    $push_registration->sendMessage($message);
+                    $push_registration->sendFormattedMessage('Test Title', $message);
                     return Response::make('attempted to push message: ' . $message);
                 } catch (\Exception $e) {
                     return Response::make('got an exception from AWS SNS: ' . $e->getMessage());

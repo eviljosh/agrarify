@@ -305,6 +305,14 @@ class Account extends BaseModel {
         }
     }
 
+    public function sendFormattedPushNotification($title, $message)
+    {
+        foreach ($this->getPushRegistrations() as $registration)
+        {
+            $registration->sendFormattedMessage($title, $message);
+        }
+    }
+
     /**
      * @param $email_address
      * @return Account
