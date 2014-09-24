@@ -175,12 +175,13 @@ class PushRegistration extends BaseModel {
         if ($this->isEnabled())
         {
             $message = [
-                'GCM' => [
-                    'data' => json_encode([
+                'GCM' => json_encode([
+                    'data' => [
                         'title' => $title,
                         'message' => $message,
-                    ])
-                ]
+                    ]
+                ]),
+                'default' => $title . ' ' . $message,
             ];
 
             PushNotificationAdapter::sendMessage($this, $message);
