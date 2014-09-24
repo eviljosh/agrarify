@@ -61,7 +61,7 @@ class PushRegistrationsController extends ApiController {
         $push_registration->setSnsArn($sns_arn);
 
         // TODO move the sending logic into PushRegistration and Account; TODO: Async do this async...
-        $push_registration->sendMessage('Your device is now enabled for push notifications');
+        $push_registration->sendFormattedMessage('Welcome!', 'Welcome to Agrarify!');
 
         $push_registration->save();
 
