@@ -98,10 +98,7 @@ class PushNotificationAdapter {
 
 
         try {
-            $sns_client->publish([
-                'Message' => $message,
-                'TargetArn' => $push_registration->getSnsArn(),
-            ]);
+            $sns_client->publish($publication_array);
         }
         catch (\Aws\Sns\Exception\EndpointDisabledException $e) {
             $push_registration->setEnabled(false);
