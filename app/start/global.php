@@ -47,7 +47,7 @@ App::after(function($request, $response)
 
     $request_content = $request->getContent();
     $request_json = json_decode($request_content, true);
-    if (array_key_exists('item', $request_json))
+    if (is_array($request_json) and array_key_exists('item', $request_json))
     {
         if (array_key_exists('password', $request_json['item'])) {
             $request_json['item']['password'] = '*****';
