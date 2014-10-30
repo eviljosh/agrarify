@@ -33,7 +33,52 @@ ClassLoader::addDirectories(array(
 |
 */
 
-Log::useFiles(storage_path().'/logs/laravel.log');
+Log::useDailyFiles(storage_path().'/logs/laravel.log');
+
+// Agrarify request/response logging
+App::before(function($request)
+{
+    //
+});
+
+App::after(function($request, $response)
+{
+    $log_string = $request->getMethod() . ' ' . $request->getPathInfo() . ' returned ' . $response->getStatusCode();
+
+    $request_content = $request->getContent();
+    $request_json = json_decode($request_content, true);
+    if (array_key_exists('item', $request_json))
+    {
+        if (array_key_exists('password', $request_json['item'])) {
+            $request_json['item']['password'] = '*****';
+        }
+        if (array_key_exists('existing_password', $request_json['item'])) {
+            $request_json['item']['existing_password'] = '*****';
+        }
+    }
+    $request_content = $request_json ?: $request_content;
+
+    $response_content = $response->getContent();
+    $response_json = json_decode($response_content, true);
+    $response_content = $response_json ?: $response_content;
+
+    $log_context = [
+        'request_authorization' => $request->headers->get('authorization'),
+        'request_content_type' => $request->getContentType(),
+        'request_query_parameters' => $request->query,
+        'request_body' => $request_content,
+        'response_body' => $response_content,
+    ];
+
+    if ($response->getStatusCode() > 299)
+    {
+        Log::error($log_string, $log_context);
+    }
+    else
+    {
+        Log::warning($log_string, $log_context);
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
