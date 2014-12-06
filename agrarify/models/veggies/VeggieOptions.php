@@ -57,6 +57,9 @@ class VeggieOptions {
             [37, 'Grapes', 'grape', 'bunches', 'grapes'],
             [38, 'Potatoes', 'potato', 'potatoes', 'potatoes'],
             [39, 'Potatoes (Sweet)', 'potato', 'potatoes', 'potatoes-sweet'],
+            [40, 'Eggs', 'egg', 'eggs', 'eggs'],
+            [41, 'Figs', 'fig', 'figs', 'figs'],
+            [42, 'Persimmons', 'persimmon', 'persimmons', 'persimmons']
         ];
     }
 
