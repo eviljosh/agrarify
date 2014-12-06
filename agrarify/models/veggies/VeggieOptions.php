@@ -17,7 +17,7 @@ class VeggieOptions {
          * 3 - Veggie collective noun
          * 4 - Veggie image name
          */
-        return [
+        $options = [
             [1, 'Apples', 'apple', 'apples', 'apples'],
             [2, 'Asparagus', 'asparagus', 'bunches', 'asparagus'],
             [3, 'Artichokes', 'artichoke', 'artichokes', 'artichokes'],
@@ -61,6 +61,12 @@ class VeggieOptions {
             [41, 'Figs', 'fig', 'figs', 'figs'],
             [42, 'Persimmons', 'persimmon', 'persimmons', 'persimmons']
         ];
+
+        usort($options, function($a, $b){
+            return strcasecmp($a[1], $b[1]);
+        });
+
+        return $options;
     }
 
     public static function getMetadata()
