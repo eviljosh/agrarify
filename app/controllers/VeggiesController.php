@@ -254,7 +254,8 @@ class VeggiesController extends ApiController {
 
         $results = [];
         $ids_seen = [];
-        for ($n = 11; $n > 3; $n--)
+        // Depending on latitude, a match of at least 3 characters means a max distance of around 120 kilometers.
+        for ($n = 11; $n >= 3; $n--)
         {
             $geohash_substring = substr($geohash, 0, $n) . '%';
 
@@ -316,7 +317,11 @@ class VeggiesController extends ApiController {
             'account'          => $account ? $account->getEmailAddress() : null,
         ];
 
-        return $this->sendSuccessResponse($results, [], $metadata);
+        return $this->sendSuccessResponse(
+            $results,
+            [VeggieTransformer::OPTIONS_SHOULD_SEE_DETAILS => true],
+            $metadata
+        );
     }
 
 }

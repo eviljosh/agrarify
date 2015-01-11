@@ -51,6 +51,8 @@ class PushRegistrationsController extends ApiController {
      */
     public function create()
     {
+        $is_first_registration = ($this->getAccount()->getPushRegistrations()->count() == 0);
+
         $payload = $this->assertRequestPayloadItem();
 
         $push_registration = new PushRegistration($payload);
@@ -61,7 +63,9 @@ class PushRegistrationsController extends ApiController {
         $push_registration->setSnsArn($sns_arn);
 
         // TODO move the sending logic into PushRegistration and Account; TODO: Async do this async...
-        $push_registration->sendFormattedMessage('Welcome!', 'Welcome to Agrarify!');
+        if ($is_first_registration) {
+            $push_registration->sendFormattedMessage('Welcome!', 'Welcome to Agrarify!');
+        }
 
         $push_registration->save();
 

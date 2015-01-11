@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Config;
 
 class VeggieOptions {
 
-    public static function getOptions()
+    public static function getOptions($should_sort = true)
     {
         /*
          * Elements are:
@@ -62,9 +62,11 @@ class VeggieOptions {
             [42, 'Persimmons', 'persimmon', 'persimmons', 'persimmons']
         ];
 
-        usort($options, function($a, $b){
-            return strcasecmp($a[1], $b[1]);
-        });
+        if ($should_sort) {
+            usort($options, function ($a, $b) {
+                return strcasecmp($a[1], $b[1]);
+            });
+        }
 
         return $options;
     }
@@ -82,7 +84,7 @@ class VeggieOptions {
 
     public static function getVeggieNameForCode($code)
     {
-        return self::getOptions()[$code - 1][1];
+        return self::getOptions(false)[$code - 1][1];
     }
 
 }

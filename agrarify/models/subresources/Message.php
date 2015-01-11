@@ -11,6 +11,7 @@ class Message extends BaseModel {
     const TYPE_VEGGIE_MESSAGE = 1;
     const TYPE_VEGGIE_OFFER = 2;
     const TYPE_VEGGIE_OFFER_ACCEPTANCE = 3;
+    const TYPE_VEGGIE_OFFER_REJECTED = 4;
 
     /**
      * @return array Of veggie message type codes.
@@ -21,6 +22,7 @@ class Message extends BaseModel {
             self::TYPE_VEGGIE_MESSAGE,
             self::TYPE_VEGGIE_OFFER,
             self::TYPE_VEGGIE_OFFER_ACCEPTANCE,
+            self::TYPE_VEGGIE_OFFER_REJECTED,
         ];
     }
 

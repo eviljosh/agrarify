@@ -305,11 +305,11 @@ class Account extends BaseModel {
         }
     }
 
-    public function sendFormattedPushNotification($title, $message)
+    public function sendFormattedPushNotification($title, $message, $veggie_id=null)
     {
         foreach ($this->getPushRegistrations() as $registration)
         {
-            $registration->sendFormattedMessage($title, $message);
+            $registration->sendFormattedMessage($title, $message, $veggie_id);
         }
     }
 

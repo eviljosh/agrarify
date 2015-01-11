@@ -169,8 +169,9 @@ class PushRegistration extends BaseModel {
      *
      * @param string $title
      * @param string $message
+     * @param int $veggie_id
      */
-    public function sendFormattedMessage($title, $message)
+    public function sendFormattedMessage($title, $message, $veggie_id=null)
     {
         if ($this->isEnabled())
         {
@@ -179,6 +180,7 @@ class PushRegistration extends BaseModel {
                     'data' => [
                         'title' => $title,
                         'message' => $message,
+                        'veggie_id' => $veggie_id,
                     ]
                 ]),
                 'default' => $title . ' ' . $message,

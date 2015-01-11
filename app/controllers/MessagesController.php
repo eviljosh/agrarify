@@ -135,7 +135,11 @@ class MessagesController extends ApiController {
             {
                 $push_title = 'You got ' . $veggie_name . '!';
             }
-            $message->getRecipientAccount()->sendFormattedPushNotification($push_title, $message_text);
+            elseif ($message->getType() == Message::TYPE_VEGGIE_OFFER_REJECTED)
+            {
+                $push_title = $veggie_name . ' request rejected.';
+            }
+            $message->getRecipientAccount()->sendFormattedPushNotification($push_title, $message_text, $veggie->getId());
 
             return $this->sendSuccessResponseCreated($message);
         }
